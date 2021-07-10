@@ -9,7 +9,8 @@ class Player{
     }
 
     x=0;
-    y=0
+    y=0;
+    isAlive=true;
     
     //Moving towards X direction
     moveForward(){
@@ -38,3 +39,5 @@ class Player{
     }
 
 }
+
+export default Player;
