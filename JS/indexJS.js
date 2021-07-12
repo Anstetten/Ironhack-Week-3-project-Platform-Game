@@ -175,7 +175,7 @@ if (5>6){    fallFakeTiles(safePaths[safePathindex][stepInPath]);
         //break interval
         // COngrats it is won ETC do you wanna go on next level?
 
-        //We shorten available time for next round
+        //We shorten available time for next rounds
         timePerRound-=50;
         safePathindex+=1;
     }
