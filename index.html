@@ -8,14 +8,72 @@
     <link rel="stylesheet" href="./Styles/indexStyles.css">
 </head>
 <body>
+
+    <div id="view">
+        <div id="control">
+            Welcome to my 80s tron platformer
+        </div>
+
+        <div id='board'>
+            
+            <div id="scenePlatform">
+                <div id='blockPlatform'>
+                  <div id="frontPlatform" class="facePlatform left big"></div>
+                  <div id="backPlatform" class="facePlatform left big"></div>
+                  <div id="leftPlatform" class="facePlatform left small"></div>
+                  <div id="rightPlatform" class="facePlatform left small"></div>
+                  <div id="topPlatform" class="facePlatform left small"></div>
+                  <div id="bottomPlatform" class="facePlatform left small"></div> 
+                </div>
+                </div>
+
+            <div id='display'>
+                <div class='block green'>
+                    <div id="front" class="face green big"></div>
+                    <div id="back" class="face green big"></div>
+                    <div id="left" class="face green small"></div>
+                    <div id="right" class="face green small"></div>
+                    <div id="top" class="face green small"></div>
+                    <div id="bottom" class="face green small"></div> 
+                  </div>
+
+                <div id="figure" >
+                    <div class="figureSide" id="figure_top"></div>
+                    <div class="figureSide" id="figure_bottom"></div>
+                    <div class="figureSide" id="figure_front"></div>
+                    <div class="figureSide" id="figure_back"></div>
+                    <div class="figureSide" id="figure_left"></div>
+                    <div class="figureSide" id="figure_right"></div>
     
+                </div>
+    
+            </div>
+            <div id="scenePlatform">
+                <div id='blockPlatform'>
+                  <div id="frontPlatform" class="facePlatform right big"></div>
+                  <div id="backPlatform" class="facePlatform right big"></div>
+                  <div id="leftPlatform" class="facePlatform right small"></div>
+                  <div id="rightPlatform" class="facePlatform right small"></div>
+                  <div id="topPlatform" class="facePlatform right small"></div>
+                  <div id="bottomPlatform" class="facePlatform right small"></div> 
+                </div>
+                </div>
+        </div>
 
+    </div>
+    
+    <template id='newBlock'>
+        <div class='block'>
+            <div id="front" class="face big"></div>
+            <div id="back" class="face big"></div>
+            <div id="left" class="face small"></div>
+            <div id="right" class="face small"></div>
+            <div id="top" class="face small"></div>
+            <div id="bottom" class="face small"></div> 
+          </div>
+    </template>
 
-
-
-
-
-    <script src="./JS/player.js"></script>
-    <script src="./JS/indexJS.js"></script>
+    <script src="./JS/player.js" type="module"></script>
+    <script src="./JS/indexJS.js" type="module"></script>
 </body>
 </html>

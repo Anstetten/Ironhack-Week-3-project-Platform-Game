@@ -1,4 +1,4 @@
-import Player from './player';
+import Player from './player.js';
 
 // For representation sake the board:
 
@@ -21,15 +21,60 @@ const safePaths=[
     []
 ]
 
+//Variables
 let player = new Player('Zsolt');
 let movesThisTurn =0;
 let timePerRound=1000;
 let gameIsOver = false;
 let safePathindex=0;
+const displayArea=document.getElementById('display');
+const blockTemplate2=document.getElementById('newBlock');
 
+//For testing
+
+GenerateTable();
+
+//Moving Glowing effectes
+    let blocks = document.querySelectorAll('.block:not(.green)');
+    setInterval(function(){
+        for (let i=0; i<10;i++){
+            let randomIndex= Math.floor(Math.random()*blocks.length);
+            blocks[randomIndex].classList.toggle('up');
+            setTimeout(function(){
+                blocks[randomIndex].classList.toggle('up');
+                blocks[randomIndex].classList.toggle('down');
+                setTimeout(function(){
+                    blocks[randomIndex].classList.toggle('down');
+                    },1500);
+
+                },1500);
+        
+            let faces = blocks[randomIndex].querySelectorAll('.face');
+            Array.from(faces).forEach((face)=>{
+                face.classList.toggle('dull');
+                setTimeout(function(){face.classList.toggle('dull');},1500);
+            })
+        }
+    },2000);
+
+
+
+
+
+
+///
+
+
+
+
+
+
+
+
+//startCountDown();
 
 //This I need to hook up to a button
-startCountDown(){
+function startCountDown(){
     //
     //
     //
@@ -37,8 +82,32 @@ startCountDown(){
 
 }
 
+//function to generate table with coordinates as classes
+function GenerateTable (){
+    let numberOfBlocksToCreate=100
+    for (let i=0; i<numberOfBlocksToCreate; i++)
+        {
+            let cloneBlock = blockTemplate2.content.cloneNode(true);
+ 
+            let colorBlock = cloneBlock.querySelector('.block')
+            //this to be deleted later
+            colorBlock.onclick= function (event){
+            event.target.parentElement.classList.add("selected");
+            console.log('writter');
+            }
 
-startNewRound(timePerRound){
+            //add coordinates
+            let coordinate= (i>9) ? i : "0"+i;
+            console.log(coordinate);
+            colorBlock.classList.add(coordinate);
+
+    
+            displayArea.appendChild(cloneBlock);}
+    }
+    
+
+
+function startNewRound(timePerRound){
     
     //We start at the first tile of the Path
     let stepInPath=0;
@@ -91,7 +160,6 @@ startNewRound(timePerRound){
 //Fnctions
 
 //This is the count down that occurs at the beginning of each round
-function startCountDown(){};
 
 //Function to update the position of the grapihical representation of the player
 function updatePlayerOnBoard(){};
@@ -100,10 +168,10 @@ function updatePlayerOnBoard(){};
 function shakeTiles(currentSafeTile){};
 
 //Restart the time indicator that shows how much time we have before the end of the turn
-function refreshTimeIndicator(timerTime);
+function refreshTimeIndicator(timerTime){};
 
 //This function falls the fake tiles 
-function fallFakeTiles(lastSafeTile);
+function fallFakeTiles(lastSafeTile){};
 
 //FUnction to check if the player is alive
 function checkIfPlayerIsAlive(currentSafeTile){
