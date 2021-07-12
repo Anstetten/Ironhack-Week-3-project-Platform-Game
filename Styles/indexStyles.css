@@ -12,6 +12,10 @@
       --sidesPlatform:1200px;
       --heightPlatform:1800px;
       --offsetPlatform: -300px;
+
+      --sidesIndicator:50px;
+      --heightIndicator:100px;
+      --offsetIndicator: -25px;
   
       --colorGreenVibrant:#09ff00;
       --colorGreenDull:#0c9e06;
@@ -239,6 +243,8 @@
           transform:scale(0) translateZ(-800px) ;
       }
   
+
+    /*Platforms*/
       #scenePlatform{
         width:auto;
         height:auto;
@@ -316,6 +322,7 @@
         animation: pulseRidePlatform 5s infinite;
       }
   
+      /*Green rotating block*/
       .block.green{
         position: absolute;
         top: -250px;
@@ -336,6 +343,98 @@
         animation: pulseSide 2s infinite;
       }
   
+      /*Indicator*/
+
+      .blockIndicator{
+        
+        width:var(--sidesIndicator);
+        height:var(--heightIndicator);
+        position: absolute;
+        top:25px;
+        left:25px;
+        transform-style: preserve-3d;
+        transition: transform 0s linear;
+        transform: translateZ(60px) scaleZ(1)
+      }
+      .blockIndicatorShrinking{
+        
+        width:var(--sidesIndicator);
+        height:var(--heightIndicator);
+        position: absolute;
+        top:25px;
+        left:25px;
+        transform-style: preserve-3d;
+        transition: transform 1s linear;
+        transform: translateZ(60px) scaleZ(1)
+      } 
+
+      .blockIndicator.shrunk{
+          transform: translateZ(60px) scaleZ(0);
+      }
+      
+      #frontIndicator{
+        width:var(--sidesIndicator);
+        height:var(--sidesIndicator);
+        position: absolute;
+        transform: translateZ(calc(var(--heightIndicator)/2));
+      }
+      
+      #backIndicator{
+        width:var(--sidesIndicator);
+        height:var(--sidesIndicator);
+        position: absolute;
+        transform: rotateY(180deg) translateZ(calc(var(--heightIndicator)/2));
+      }
+      
+      #leftIndicator{
+        width:var(--heightIndicator);
+        height:var(--sidesIndicator);
+        position: absolute;
+        left:var(--offsetIndicator);
+        transform: rotateY(-90deg) translateZ(calc(var(--sidesIndicator)/2));
+      }
+      
+      #rightIndicator{
+        width:var(--heightIndicator);
+        height:var(--sidesIndicator);
+        position: absolute;
+        left:var(--offsetIndicator);
+        transform: rotateY( 90deg) translateZ(calc(var(--sidesIndicator)/2));
+      }
+      
+      #topIndicator{
+        width:var(--sidesIndicator);
+        height:var(--heightIndicator);
+        position: absolute;
+        top:var(--offsetIndicator);
+        transform: rotateX(90deg) translateZ(calc(var(--sidesIndicator)/2));
+      }
+      
+      #bottomIndicator{
+        width:var(--sidesIndicator);
+        height:var(--heightIndicator);
+        position: absolute;
+        top:var(--offsetIndicator);
+        transform: rotateX(-90deg) translateZ(calc(var(--sidesIndicator)/2));
+      }
+
+      .face.indicator {
+        background-color:black;
+        box-shadow: 0px 0px 25px #09ff00 inset;
+        border:1px solid white;
+        /* animation: pulseTopSide 2s infinite; */
+      }
+      
+      .face.indicator.small {
+        background-color:#09ff00;
+        border:1px solid white;
+        /* animation: pulseSide 2s infinite; */
+      }
+
+
+      /*Animations*/
+
+
       @keyframes rotate{
         0% {transform:rotateZ(0deg)}
         25% {transform:rotateZ(90deg)}

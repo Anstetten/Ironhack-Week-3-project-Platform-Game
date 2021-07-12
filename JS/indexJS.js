@@ -29,44 +29,18 @@ let gameIsOver = false;
 let safePathindex=0;
 const displayArea=document.getElementById('display');
 const blockTemplate2=document.getElementById('newBlock');
+const indicatorBlock= document.getElementById('indicator');
+
+
+//Events and eventhandlers
+
+
 
 //For testing
 
 GenerateTable();
-
-//Moving Glowing effectes
-    let blocks = document.querySelectorAll('.block:not(.green)');
-    setInterval(function(){
-        for (let i=0; i<10;i++){
-            let randomIndex= Math.floor(Math.random()*blocks.length);
-            blocks[randomIndex].classList.toggle('up');
-            setTimeout(function(){
-                blocks[randomIndex].classList.toggle('up');
-                blocks[randomIndex].classList.toggle('down');
-                setTimeout(function(){
-                    blocks[randomIndex].classList.toggle('down');
-                    },1500);
-
-                },1500);
-        
-            let faces = blocks[randomIndex].querySelectorAll('.face');
-            Array.from(faces).forEach((face)=>{
-                face.classList.toggle('dull');
-                setTimeout(function(){face.classList.toggle('dull');},1500);
-            })
-        }
-    },2000);
-
-
-
-
-
-
-///
-
-
-
-
+setMovingAndGlowing();
+refreshTimeIndicator(5000);
 
 
 
@@ -97,15 +71,37 @@ function GenerateTable (){
             }
 
             //add coordinates
-            let coordinate= (i>9) ? i : "0"+i;
-            console.log(coordinate);
+            let coordinate= (i>9) ? ''+i : "0"+i;
             colorBlock.classList.add(coordinate);
 
     
             displayArea.appendChild(cloneBlock);}
     }
     
+function setMovingAndGlowing(){
+    let blocks = document.querySelectorAll('.block:not(.green)');
+    setInterval(function(){
+        for (let i=0; i<10;i++){
+            let randomIndex= Math.floor(Math.random()*blocks.length);
+            blocks[randomIndex].classList.toggle('up');
+            setTimeout(function(){
+                blocks[randomIndex].classList.toggle('up');
+                blocks[randomIndex].classList.toggle('down');
+                setTimeout(function(){
+                    blocks[randomIndex].classList.toggle('down');
+                    },1500);
 
+                },1500);
+        
+            let faces = blocks[randomIndex].querySelectorAll('.face');
+            Array.from(faces).forEach((face)=>{
+                face.classList.toggle('dull');
+                setTimeout(function(){face.classList.toggle('dull');},1500);
+            })
+        }
+    },2000);
+
+}
 
 function startNewRound(timePerRound){
     
@@ -168,10 +164,29 @@ function updatePlayerOnBoard(){};
 function shakeTiles(currentSafeTile){};
 
 //Restart the time indicator that shows how much time we have before the end of the turn
-function refreshTimeIndicator(timerTime){};
+function refreshTimeIndicator(timerTime){
+        let sheet = document.styleSheets[0];
+        let rules = sheet.cssRules;
+        let transitionRule;
+
+        for (let i=0; i<rules.length;i++){
+
+            if (rules[i].selectorText===".blockIndicatorShrinking") {transitionRule=rules[i]};
+
+        }
+        transitionRule.style.transition=`transform ${timerTime/1000}s linear`;
+
+
+        indicatorBlock.classList.add("blockIndicatorShrinking");
+        indicatorBlock.classList.toggle("shrunk");
+        setTimeout(function(){
+            indicatorBlock.classList.remove("blockIndicatorShrinking");
+            indicatorBlock.classList.toggle("shrunk");
+        },timerTime);
+}
 
 //This function falls the fake tiles 
-function fallFakeTiles(lastSafeTile){};
+function fallFakeTiles(lastSafeTile){}
 
 //FUnction to check if the player is alive
 function checkIfPlayerIsAlive(currentSafeTile){
@@ -182,7 +197,7 @@ function checkIfPlayerIsAlive(currentSafeTile){
 function gameOver(){}
 
 
-function pressedForwardButton(){};
-function pressedLeftdButton(){};
-function pressedRightdButton(){};
-function pressedBackdButton(){};
+function pressedForwardButton(){console.log("Forwards");};
+function pressedLeftdButton(){console.log("Left");};
+function pressedRightdButton(){console.log("Right");};
+function pressedBackdButton(){console.log("BAck");};
