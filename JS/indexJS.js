@@ -23,6 +23,7 @@ const safePaths=[
 
 //Variables
 let player = new Player('Zsolt');
+let playerAvatar= document.getElementById('figure');
 let movesThisTurn =0;
 let timePerRound=1000;
 let gameIsOver = false;
@@ -30,10 +31,28 @@ let safePathindex=0;
 const displayArea=document.getElementById('display');
 const blockTemplate2=document.getElementById('newBlock');
 const indicatorBlock= document.getElementById('indicator');
+//these help the jump animation
+let playerXtranslate=32;
+let playerYtranslate=32;
 
 
 //Events and eventhandlers
-
+window.addEventListener("keydown", function (event){
+    switch (event.key){
+        case "ArrowUp":
+            pressedForwardButton();
+            break;
+        case "ArrowLeft":
+            pressedLeftdButton();
+            break;
+        case "ArrowRight":
+            pressedRightdButton();
+            break;
+        case "ArrowDown":
+            pressedBackButton();
+            break;
+        }
+});
 
 
 //For testing
@@ -108,6 +127,8 @@ function startNewRound(timePerRound){
     //We start at the first tile of the Path
     let stepInPath=0;
     let timePerThisTurn=timePerRound;
+    //Set up the jumping animation transition time:
+    playerAvatar.style.transition=`transform ${timePerRound/1000/2}s linear`;
     //Set up game for first step of the path
     player.setStartingPosition(safePaths[safePathindex][0][0], safePaths[safePathindex][0][1]);
     updatePlayerOnBoard();
@@ -158,7 +179,22 @@ function startNewRound(timePerRound){
 //This is the count down that occurs at the beginning of each round
 
 //Function to update the position of the grapihical representation of the player
-function updatePlayerOnBoard(){};
+function updatePlayerOnBoard(){
+    let placementY=player.y*116+33;
+    console.log(placementY);
+    console.log(playerYtranslate);
+    let placementYmiddle= (placementY-playerYtranslate)/2+playerYtranslate;
+    console.log(placementYmiddle);
+    playerYtranslate=placementY;
+    
+    let placementX=player.x*116+33;
+    let placementXmiddle= (placementX-playerXtranslate)/2+playerXtranslate;
+    playerXtranslate=placementX;
+    
+    playerAvatar.style.transform=`translate3d(${placementXmiddle}px,${placementYmiddle}px,50px)`;
+    setTimeout(function(){playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;},100)
+    
+};
 
 //This is the function to shake the tiles aorund the player except the next safe one
 function shakeTiles(currentSafeTile){};
@@ -197,7 +233,32 @@ function checkIfPlayerIsAlive(currentSafeTile){
 function gameOver(){}
 
 
-function pressedForwardButton(){console.log("Forwards");};
-function pressedLeftdButton(){console.log("Left");};
-function pressedRightdButton(){console.log("Right");};
-function pressedBackdButton(){console.log("BAck");};
+//Arrow key eccent handlers
+function pressedForwardButton(){
+    console.log(playerAvatar.style);
+    console.log(player.x + " " + player.y);
+    player.moveForward();
+    console.log(player.x + " " + player.y);
+    updatePlayerOnBoard()
+}
+function pressedLeftdButton(){
+    console.log("Left");
+    console.log(player.x + " " + player.y);
+    player.moveLeft();
+    console.log(player.x + " " + player.y);
+    updatePlayerOnBoard()
+}
+function pressedRightdButton(){
+    console.log("Right");
+    console.log(player.x + " " + player.y);
+    player.moveRight();
+    console.log(player.x + " " + player.y);
+    updatePlayerOnBoard()
+}
+function pressedBackButton(){
+    console.log("BAck");
+    console.log(player.x + " " + player.y);
+    player.moveBack();
+    console.log(player.x + " " + player.y);
+    updatePlayerOnBoard()
+}

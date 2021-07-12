@@ -14,22 +14,22 @@ class Player{
     
     //Moving towards X direction
     moveForward(){
-        this.x+=1;
+        if(this.x<10) this.x+=1;
     }
 
     //Moving towards negative Y direction
     moveLeft(){
-        this.y-=1;
+        if(this.y>0) this.y-=1;
     }
 
     //Moving towards positive Y direction
     moveRight(){
-        this.y+=1;
+        if(this.y<9) this.y+=1;
     }
 
     //Moving towards negativ X direction
     moveBack(){
-        this.x-=1;
+        if(this.x>0) this.x-=1;
     }
 
     //Set the starting position at the beginning of each round
