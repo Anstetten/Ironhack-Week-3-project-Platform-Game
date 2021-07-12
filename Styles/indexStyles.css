@@ -37,17 +37,32 @@
   }
   
   #control{
-    color:black;
+    color:white;
     font-size: 2rem;
     font-weight: bolder;
-    width:300px;
+    width:650px;
     height: 300px;
-    background-color: rgba(0, 204, 255, 0.356);
+    background-color: rgba(225, 0, 255, 0.815);
     position:absolute;
-    bottom:600px;
-    right:600px;
+    margin:auto;
     z-index: 600;
+    visibility: hidden;
   }
+
+  #counter{
+    color:white;
+    font-size: 2rem;
+    font-weight: bolder;
+    width:200x;
+    height: 200px;
+    background-color: rgba(17, 0, 255, 0.815);
+    position:absolute;
+    margin:auto;
+    z-index: 600;
+    visibility: hidden;
+  }
+
+
   
   body{
     background-color: black;
@@ -82,7 +97,7 @@
   #board{
       overflow: visible;
       transform-style: preserve-3d;
-      perspective:1200px;
+      perspective:30000px;
       /*transform: rotateX(60deg) rotateZ(-45deg) rotateY(0deg);*/
       transform: rotateZ(-55deg) rotateX(40deg) rotateY(45deg) scale(0.8);
       display: flex;
@@ -101,7 +116,7 @@
       position: absolute;
       z-index: 8;
       transform-style: preserve-3d;
-      transform: translate3d(33px,33px,30px);
+      transform: translate3d(-100px,600px,35px);
       /* transform: translateZ(25px) translateY(32px) translateX(32px); */
       transition: transform 0.1s ease-in-out;
   
@@ -233,12 +248,16 @@
       background-color:var(--colorPurpleDull);
     }
 
-     .block.selected{
+     .block.fallen{
           
           transform: scale(0.9);
           z-index: 0;
           
           transform:scale(0) translateZ(-800px) ;
+      }
+
+      .block.shaken{
+          animation: shake 0.2s infinite alternate-reverse;
       }
   
 

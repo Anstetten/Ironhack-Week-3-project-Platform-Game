@@ -17,7 +17,7 @@ import Player from './player.js';
 
 
 const safePaths=[
-    [40,41,42,43,44,45,46,47,48,49],
+    [51,41,42,43,44,45,46,47,48,49],
     []
 ]
 
@@ -25,15 +25,18 @@ const safePaths=[
 let player = new Player('Zsolt');
 let playerAvatar= document.getElementById('figure');
 let movesThisTurn =0;
-let timePerRound=1000;
+let timePerRound=5000;
 let gameIsOver = false;
 let safePathindex=0;
 const displayArea=document.getElementById('display');
 const blockTemplate2=document.getElementById('newBlock');
 const indicatorBlock= document.getElementById('indicator');
+const messageWindow=document.getElementById('control');
+const readyButton=document.getElementById('readyButton');
+const counterWindow=document.getElementById('counter');
 //these help the jump animation
-let playerXtranslate=32;
-let playerYtranslate=32;
+let playerXtranslate=-100;
+let playerYtranslate=600;
 
 
 //Events and eventhandlers
@@ -53,25 +56,51 @@ window.addEventListener("keydown", function (event){
             break;
         }
 });
+window.onload=showMessageWindow;
+readyButton.onclick=startCountDown;
 
 
-//For testing
 
+//For setting up the visual board
 GenerateTable();
 setMovingAndGlowing();
-refreshTimeIndicator(5000);
 
+//Show Message window
+function showMessageWindow(){
+    messageWindow.style.visibility="visible"
 
+}
 
-
-//startCountDown();
 
 //This I need to hook up to a button
 function startCountDown(){
-    //
-    //
-    //
-    startNewRound(timePerRound);
+    let counter=3;
+    messageWindow.style.visibility='hidden';
+    counterWindow.style.visibility='visible';
+    counterWindow.innerHTML=counter;
+    let counterTimer= setInterval(() => {
+        counter--;
+        if(counterWindow.innerHTML==="Go!!!!"){
+            clearInterval(counterTimer);
+            counterWindow.style.visibility="hidden";
+            startNewRound(timePerRound);
+            
+        }
+        
+        else if(counter===0){
+            counterWindow.innerHTML="Go!!!!"
+            
+        }
+
+        else{
+            counterWindow.innerHTML=counter;
+        }
+
+        
+        
+        
+    }, 1000);
+    
 
 }
 
@@ -91,7 +120,7 @@ function GenerateTable (){
 
             //add coordinates
             let coordinate= (i>9) ? ''+i : "0"+i;
-            colorBlock.classList.add(coordinate);
+            colorBlock.id=coordinate;
 
     
             displayArea.appendChild(cloneBlock);}
@@ -123,21 +152,22 @@ function setMovingAndGlowing(){
 }
 
 function startNewRound(timePerRound){
-    
+    console.log(player.y +" " + player.x);
     //We start at the first tile of the Path
     let stepInPath=0;
     let timePerThisTurn=timePerRound;
-    //Set up the jumping animation transition time:
-    playerAvatar.style.transition=`transform ${timePerRound/1000/2}s linear`;
     //Set up game for first step of the path
-    player.setStartingPosition(safePaths[safePathindex][0][0], safePaths[safePathindex][0][1]);
+    player.setStartingPosition(Math.floor(safePaths[safePathindex][stepInPath]/10), safePaths[safePathindex][stepInPath]%10);
+    
     updatePlayerOnBoard();
-    shakeTiles(safePaths[safePathindex][stepInPath]);
+
+    shakeTiles(safePaths[safePathindex][stepInPath],stepInPath);
+    
     refreshTimeIndicator(timePerThisTurn);
 
     //Launch setInterval here in which !!!!!!!!!!
     ////////////////////////////////////////////////////////////////
-    fallFakeTiles(safePaths[safePathindex][stepInPath]);
+if (5>6){    fallFakeTiles(safePaths[safePathindex][stepInPath]);
     movesThisTurn=0;
 
     if (stepInPath===9){
@@ -164,7 +194,7 @@ function startNewRound(timePerRound){
         // We have to break TimeInterval and start new round (ask if we want new round)
         gameOver(lastSafeTileOfPath);
     }}
-
+}
 
 
     /////////////////////////////
@@ -181,10 +211,8 @@ function startNewRound(timePerRound){
 //Function to update the position of the grapihical representation of the player
 function updatePlayerOnBoard(){
     let placementY=player.y*116+33;
-    console.log(placementY);
-    console.log(playerYtranslate);
+    
     let placementYmiddle= (placementY-playerYtranslate)/2+playerYtranslate;
-    console.log(placementYmiddle);
     playerYtranslate=placementY;
     
     let placementX=player.x*116+33;
@@ -197,14 +225,28 @@ function updatePlayerOnBoard(){
 };
 
 //This is the function to shake the tiles aorund the player except the next safe one
-function shakeTiles(currentSafeTile){};
+function shakeTiles(currentSafeTile,stepInPath){
+    console.log(currentSafeTile);
+    
+    let nextSafeTile=safePaths[safePathindex][stepInPath+1];
+    let listOfAdjacentTiles=getAllAdjacentTile(currentSafeTile,nextSafeTile);
+    
+    listOfAdjacentTiles.forEach((tile) => {
+        let tileBlock = document.getElementById(`${tile}`);
+        tileBlock.classList.toggle("shaken");
+        
+    });
+
+    console.log(listOfAdjacentTiles);
+
+
+};
 
 //Restart the time indicator that shows how much time we have before the end of the turn
 function refreshTimeIndicator(timerTime){
         let sheet = document.styleSheets[0];
         let rules = sheet.cssRules;
         let transitionRule;
-
         for (let i=0; i<rules.length;i++){
 
             if (rules[i].selectorText===".blockIndicatorShrinking") {transitionRule=rules[i]};
@@ -219,6 +261,37 @@ function refreshTimeIndicator(timerTime){
             indicatorBlock.classList.remove("blockIndicatorShrinking");
             indicatorBlock.classList.toggle("shrunk");
         },timerTime);
+}
+
+function getAllAdjacentTile(tileCoordinate,nextSafeTile){
+    let currentY=Math.floor(tileCoordinate/10);
+    let currentX=tileCoordinate%10;
+    let tileList=[];
+    let topLeft= (currentY>0 && currentX >0) ? (currentY-1)*10+(currentX-1) : null;
+    if (topLeft!==null && topLeft!==nextSafeTile) tileList.push(topLeft);
+
+    let middleLeft= (currentX >0) ? (currentY)*10+(currentX-1) : null;
+    if (middleLeft!==null  && middleLeft!==nextSafeTile) tileList.push(middleLeft);
+
+    let bottomLeft= (currentY<9 && currentX >0) ? (currentY+1)*10+(currentX-1) : null;
+    if (bottomLeft!==null && bottomLeft!==nextSafeTile) tileList.push(bottomLeft);
+
+    let topMiddle= (currentY>0) ? (currentY-1)*10+(currentX) : null;
+    if (topMiddle!==null && topMiddle!==nextSafeTile) tileList.push(topMiddle);
+
+    let bottomMiddle= (currentY<9) ? (currentY+1)*10+(currentX) : null;
+    if (bottomMiddle!==null && bottomMiddle!==nextSafeTile) tileList.push(bottomMiddle);
+
+    let topRight= (currentY>0 && currentX <9) ? (currentY-1)*10+(currentX+1) : null;
+    if (topRight!==null && topRight!==nextSafeTile) tileList.push(topRight);
+
+    let middleRight= (currentX <9) ? (currentY)*10+(currentX+1) : null;
+    if (middleRight!==null && middleRight!==nextSafeTile) tileList.push(middleRight);
+
+    let bottomRight= (currentY<9 && currentX <9) ? (currentY+1)*10+(currentX+1) : null;
+    if (bottomRight!==null && bottomRight!==nextSafeTile) tileList.push(bottomRight);
+
+    return tileList;
 }
 
 //This function falls the fake tiles 
