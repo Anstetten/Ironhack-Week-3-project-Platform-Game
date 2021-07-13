@@ -37,19 +37,32 @@ const safePaths=[
 let player = new Player('Zsolt');
 let playerAvatar= document.getElementById('figure');
 let movesThisTurn =0;
-let timePerRound=1000;
+let timePerRound=2000;
 let gameIsOver = false;
-let safePathindex=6;
+let safePathindex=0;
+let stepInPath=0;
+let inTransition = false;
+let globalPlacementY=0;
+let globalPlacementX=0;
 const displayArea=document.getElementById('display');
 const blockTemplate2=document.getElementById('newBlock');
 const indicatorBlock= document.getElementById('indicator');
 const messageWindow=document.getElementById('control');
+const gameOverWindow=document.getElementById('gameOver');
+const gameWonWindow=document.getElementById('gameWon');
 const readyButton=document.getElementById('readyButton');
+const restartButton=document.getElementById('restartButton');
 const counterWindow=document.getElementById('counter');
+const timeInfo=document.getElementById('timeInfo');
+
+
 //these help the jump animation
 let playerXtranslate=-100;
 let playerYtranslate=600;
 let areYouReady=false;
+playerAvatar.addEventListener('transitionend',()=>{
+    console.log(`I am transitioned`);
+})
 
 
 //Events and eventhandlers
@@ -71,12 +84,15 @@ window.addEventListener("keydown", function (event){
 });
 window.onload=showMessageWindow;
 readyButton.onclick=startCountDown;
+restartButton.onclick=startCountDown;
+gameWonWindow.onclick=onToNextLevel;
+
 
 
 
 //For setting up the visual board
 GenerateTable();
-setMovingAndGlowing();
+//setMovingAndGlowing();
 
 //Show Message window
 function showMessageWindow(){
@@ -87,8 +103,11 @@ function showMessageWindow(){
 
 //This I need to hook up to a button
 function startCountDown(){
+    GenerateTable();
     let counter=3;
+    movesThisTurn=1;
     messageWindow.style.visibility='hidden';
+    gameOverWindow.style.visibility='hidden';
     counterWindow.style.visibility='visible';
     counterWindow.innerHTML=counter;
     let counterTimer= setInterval(() => {
@@ -119,6 +138,13 @@ function startCountDown(){
 
 //function to generate table with coordinates as classes
 function GenerateTable (){
+    let blocks = document.querySelectorAll('.block:not(.green)');
+    playerAvatar.classList.remove("fallen");
+    playerAvatar.style.visibility="visible";
+    playerAvatar.style.transform=' translate3d(-100px,600px,35px)';
+    globalPlacementY=0;
+    globalPlacementX=0;
+    blocks.forEach((block)=>{block.remove()});
     let numberOfBlocksToCreate=100
     for (let i=0; i<numberOfBlocksToCreate; i++)
         {
@@ -142,39 +168,40 @@ function GenerateTable (){
 function setMovingAndGlowing(){
     let blocks = document.querySelectorAll('.block:not(.green)');
     setInterval(function(){
-        for (let i=0; i<10;i++){
+        for (let i=0; i<5;i++){
             let randomIndex= Math.floor(Math.random()*blocks.length);
-            blocks[randomIndex].classList.toggle('up');
-            setTimeout(function(){
-                blocks[randomIndex].classList.toggle('up');
-                blocks[randomIndex].classList.toggle('down');
-                setTimeout(function(){
-                    blocks[randomIndex].classList.toggle('down');
-                    },1500);
+            blocks[randomIndex].classList.toggle('move');
+            // setTimeout(function(){
+            //     blocks[randomIndex].classList.toggle('up');
+            //     blocks[randomIndex].classList.toggle('down');
+            //     setTimeout(function(){
+            //         blocks[randomIndex].classList.toggle('down');
+            //         },2500);
 
-                },1500);
+            //     },2500);
         
             let faces = blocks[randomIndex].querySelectorAll('.face');
             Array.from(faces).forEach((face)=>{
                 face.classList.toggle('dull');
-                setTimeout(function(){face.classList.toggle('dull');},1500);
+                //setTimeout(function(){face.classList.toggle('dull');},2500);
             })
         }
-    },2000);
+    },3000);
 
 }
 
 function startNewRound(timePerRound){
 
     //We start at the first tile of the Path
-    let stepInPath=0;
+    
     let timePerThisTurn=timePerRound;
     areYouReady=true;
     //Set up game for first step of the path
     player.setStartingPosition(Math.floor(safePaths[safePathindex][stepInPath]/10), safePaths[safePathindex][stepInPath]%10);
-    
+    movesThisTurn=0;
     updatePlayerOnBoard();
-
+    
+    playerAvatar.style.transition="transform 0.15s ease-in-out";
     shakeTiles(safePaths[safePathindex][stepInPath],stepInPath);
     
     refreshTimeIndicator(timePerThisTurn);
@@ -182,48 +209,45 @@ function startNewRound(timePerRound){
     //Launch setInterval here in which !!!!!!!!!!
     ////////////////////////////////////////////////////////////////
     let timerThisTurn =setInterval(() => {
-        refreshTimeIndicator(timePerThisTurn);
-        fallFakeTiles(safePaths[safePathindex][stepInPath],safePaths[safePathindex][stepInPath+1]);
+        
         movesThisTurn=0;
+        fallFakeTiles(safePaths[safePathindex][stepInPath],safePaths[safePathindex][stepInPath+1]);
         stepInPath++;
+        if(stepInPath===safePaths[safePathindex].length){
+            clearInterval(timerThisTurn);
+            playerAvatar.classList.toggle('victorious');
+            setTimeout(()=>{
+                gameWonWindow.style.visibility="visible";
+                timeInfo.innerHTML=(timePerRound-50)/1000;
+                            },800)
+        }
+
+        else{
+
+        checkIfPlayerIsAlive(safePaths[safePathindex][stepInPath],timerThisTurn);
+        refreshTimeIndicator(timePerThisTurn);
+        
         shakeTiles(safePaths[safePathindex][stepInPath],stepInPath);
 
-
+        }
+        
 
     }, timePerThisTurn);
-
-
-if (5>6){
-    if (stepInPath===9){
-        //Game is won
-        //break interval
-        // COngrats it is won ETC do you wanna go on next level?
-
-        //We shorten available time for next rounds
-        timePerRound-=50;
-        safePathindex+=1;
-    }
-    
-    else {refreshTimeIndicator(timePerThisTurn);
-    
-
-    //Update the next safe tile
-    stepInPath+=1;
-
-    if (checkIfPlayerIsAlive(safePaths[safePathindex][stepInPath])){
-        shakeTiles(safePaths[safePathindex][stepInPath]);
-    }
-
-    else{
-        // We have to break TimeInterval and start new round (ask if we want new round)
-        gameOver(lastSafeTileOfPath);
-    }}
-}
-
-
-    /////////////////////////////
-
 };
+
+function onToNextLevel(){
+    playerAvatar.style.visibility="hidden";
+    gameWonWindow.style.visibility="hidden";
+    playerAvatar.style.transition="none";
+    playerAvatar.style.transform=`translate3d(-100px,600px,-200px)`;
+    safePathindex++;
+    player.x=0;
+    player.y=0;
+    stepInPath=0;
+    timePerRound-=50;
+    
+    startCountDown();
+}
 
 
 
@@ -234,6 +258,9 @@ if (5>6){
 
 //Function to update the position of the grapihical representation of the player
 function updatePlayerOnBoard(){
+    
+    if (movesThisTurn===0){
+    inTransition=true;
     let placementY=player.y*116+33;
     
     let placementYmiddle= (placementY-playerYtranslate)/2+playerYtranslate;
@@ -242,36 +269,41 @@ function updatePlayerOnBoard(){
     let placementX=player.x*116+33;
     let placementXmiddle= (placementX-playerXtranslate)/2+playerXtranslate;
     playerXtranslate=placementX;
-    
+    globalPlacementX=placementX;
+    globalPlacementY=placementY;
+
     playerAvatar.style.transform=`translate3d(${placementXmiddle}px,${placementYmiddle}px,50px)`;
-    setTimeout(function(){playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;},100)
+    setTimeout(function(){playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;},150);
+}
     
 };
 
 //This is the function to shake the tiles aorund the player except the next safe one
 function shakeTiles(currentSafeTile,stepInPath){
-
+    
     let allBlocks=document.querySelectorAll('.block:not(.green)');
     allBlocks.forEach((block)=>{
-        block.classList.remove("shaken");
+        
+        if (block.classList.contains('shaken')){
+            block.classList.remove("shaken");
+            
+        }
+        
     })
     let nextSafeTile=(safePaths[safePathindex][stepInPath+1]);
-   // console.log(`Next safe tile`, nextSafeTile)
+   
     let listOfAdjacentTiles=getAllAdjacentTile(currentSafeTile,nextSafeTile);
-    //console.log(listOfAdjacentTiles);
+    
     listOfAdjacentTiles.forEach((tile) => {
-        //console.log(tile);
+        
         let tileBlock = document.getElementById(`${tile}`);
         if (!tileBlock.classList.contains("fallen")) {
             
-            tileBlock.classList.remove("up");
-            tileBlock.classList.remove("down");
+            //tileBlock.classList.remove("up");
+            //tileBlock.classList.remove("down");
             tileBlock.classList.add("shaken");}
         
     });
-
-
-
 
 };
 
@@ -293,7 +325,7 @@ function refreshTimeIndicator(timerTime){
         setTimeout(function(){
             indicatorBlock.classList.remove("blockIndicatorShrinking");
             indicatorBlock.classList.remove("shrunk");
-        },timerTime*0.99);
+        },timerTime*0.92);
 }
 
 function getAllAdjacentTile(tileCoordinate,nextSafeTile){
@@ -403,8 +435,9 @@ function fallFakeTiles(lastSafeTile,nextSafeTile){
     finalTilesToFall.forEach(tile => {
         let tileBlock = document.getElementById(`${tile}`);
         tileBlock.classList.remove("shaken");
-        tileBlock.classList.remove("up");
-        tileBlock.classList.remove("down");
+        // tileBlock.classList.remove("up");
+        // tileBlock.classList.remove("down");
+        // tileBlock.classList.remove("move");
         
         tileBlock.classList.add("fallen");
         
@@ -414,12 +447,42 @@ function fallFakeTiles(lastSafeTile,nextSafeTile){
 }
 
 //FUnction to check if the player is alive
-function checkIfPlayerIsAlive(currentSafeTile){
+function checkIfPlayerIsAlive(currentSafeTile,timer){
+    let playerTile=player.getTile();
+    
+    let safeTile= currentSafeTile+"";
+
+    console.log(`player til: ${playerTile}  safe: ${safeTile}`);
+
+    if(playerTile===safeTile){
+        //Game can go on
+    }
+
+    else{
+       gameOver(timer);
+
+    }
 
 }
 
 //Function to handle if game is gameOver
-function gameOver(){}
+function gameOver(timer){
+    clearInterval(timer);
+    movesThisTurn=1;
+    
+    playerAvatar.style.transition="none";
+    playerAvatar.style.transition="transform 2s ease-in-out";
+    playerAvatar.style.transform=`translate3d(${globalPlacementX}px,${globalPlacementY}px,-800px) rotateY(-120deg) rotateX(-120deg)`;
+    setTimeout(()=>{
+        player.x=0;
+        player.y=0;
+        gameOverWindow.style.visibility="visible";
+        playerAvatar.style.visibility='hidden';
+        playerAvatar.style.transition="none";
+        playerAvatar.style.transform=`translate3d(-100px,600px,-200px)`;
+        stepInPath=0;
+    },1500)
+}
 
 
 //Arrow key eccent handlers
@@ -427,7 +490,7 @@ function pressedForwardButton(){
     if (movesThisTurn<1 && areYouReady!==false){
         player.moveForward();
         updatePlayerOnBoard();
-        movesThisTurn++;
+        movesThisTurn=1;
     }
     
 }
@@ -435,14 +498,14 @@ function pressedLeftdButton(){
     if (movesThisTurn<1 && areYouReady!==false){
         player.moveLeft();
         updatePlayerOnBoard();
-        movesThisTurn++;
+        movesThisTurn=1;
     }
 }
 function pressedRightdButton(){
     if (movesThisTurn<1 && areYouReady!==false){
     player.moveRight();
     updatePlayerOnBoard();
-    movesThisTurn++;
+    movesThisTurn=1;
 }
 }
 function pressedBackButton(){
@@ -450,6 +513,6 @@ function pressedBackButton(){
     {
     player.moveBack();
     updatePlayerOnBoard();
-    movesThisTurn++;
+    movesThisTurn=1;
     }
 }

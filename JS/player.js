@@ -38,6 +38,13 @@ class Player{
         this.x=posX;
     }
 
+    getTile(){
+        let playerTile="";
+        playerTile=""+this.y+this.x;
+
+        return playerTile;
+    }
+
 }
 
 export default Player;
