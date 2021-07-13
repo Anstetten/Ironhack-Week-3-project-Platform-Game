@@ -17,17 +17,29 @@ import Player from './player.js';
 
 
 const safePaths=[
-    [51,41,42,43,44,45,46,47,48,49],
-    []
+    [30,31,32,33,34,35,36,37,38,39],
+    [60,61,62,63,53,43,33,23,24,25,26,27,28,29],
+    [80,81,82,72,62,63,64,65,75,85,86,87,88,89],
+    ['00','01','02','03','04',14,24,25,26,27,17,18,19],
+    [80,70,71,72,73,63,53,43,33,34,35,36,46,47,48,49],
+    [60,61,62,63,64,65,66,67,68,58,48,38,28,29],
+    [40,50,60,70,80,81,82,83,84,85,75,65,66,67,77,78,79],
+    [10,11,12,22,23,33,34,44,45,55,56,66,67,68,58,48,49],
+    [70,60,61,62,52,53,54,44,45,46,47,48,49],
+    ['00','01','02',12,13,23,33,43,53,63,64,65,66,67,68,69],
+    [70,71,72,73,63,53,54,55,45,35,25,26,27,28,29],
+    [30,31,32,33,34,24,14,15,16,26,36,46,56,66,67,68,69],
+    [90,91,92,93,94,84,74,75,65,55,45,46,36,26,25,24,14,"04","05","06","07","08","09"],
+    [50,51,61,62,63,53,43,33,23,24,25,26,36,46,47,48,49]
 ]
 
 //Variables
 let player = new Player('Zsolt');
 let playerAvatar= document.getElementById('figure');
 let movesThisTurn =0;
-let timePerRound=5000;
+let timePerRound=1000;
 let gameIsOver = false;
-let safePathindex=0;
+let safePathindex=6;
 const displayArea=document.getElementById('display');
 const blockTemplate2=document.getElementById('newBlock');
 const indicatorBlock= document.getElementById('indicator');
@@ -37,6 +49,7 @@ const counterWindow=document.getElementById('counter');
 //these help the jump animation
 let playerXtranslate=-100;
 let playerYtranslate=600;
+let areYouReady=false;
 
 
 //Events and eventhandlers
@@ -115,7 +128,7 @@ function GenerateTable (){
             //this to be deleted later
             colorBlock.onclick= function (event){
             event.target.parentElement.classList.add("selected");
-            console.log('writter');
+            
             }
 
             //add coordinates
@@ -152,10 +165,11 @@ function setMovingAndGlowing(){
 }
 
 function startNewRound(timePerRound){
-    console.log(player.y +" " + player.x);
+
     //We start at the first tile of the Path
     let stepInPath=0;
     let timePerThisTurn=timePerRound;
+    areYouReady=true;
     //Set up game for first step of the path
     player.setStartingPosition(Math.floor(safePaths[safePathindex][stepInPath]/10), safePaths[safePathindex][stepInPath]%10);
     
@@ -167,9 +181,19 @@ function startNewRound(timePerRound){
 
     //Launch setInterval here in which !!!!!!!!!!
     ////////////////////////////////////////////////////////////////
-if (5>6){    fallFakeTiles(safePaths[safePathindex][stepInPath]);
-    movesThisTurn=0;
+    let timerThisTurn =setInterval(() => {
+        refreshTimeIndicator(timePerThisTurn);
+        fallFakeTiles(safePaths[safePathindex][stepInPath],safePaths[safePathindex][stepInPath+1]);
+        movesThisTurn=0;
+        stepInPath++;
+        shakeTiles(safePaths[safePathindex][stepInPath],stepInPath);
 
+
+
+    }, timePerThisTurn);
+
+
+if (5>6){
     if (stepInPath===9){
         //Game is won
         //break interval
@@ -226,18 +250,27 @@ function updatePlayerOnBoard(){
 
 //This is the function to shake the tiles aorund the player except the next safe one
 function shakeTiles(currentSafeTile,stepInPath){
-    console.log(currentSafeTile);
-    
-    let nextSafeTile=safePaths[safePathindex][stepInPath+1];
+
+    let allBlocks=document.querySelectorAll('.block:not(.green)');
+    allBlocks.forEach((block)=>{
+        block.classList.remove("shaken");
+    })
+    let nextSafeTile=(safePaths[safePathindex][stepInPath+1]);
+   // console.log(`Next safe tile`, nextSafeTile)
     let listOfAdjacentTiles=getAllAdjacentTile(currentSafeTile,nextSafeTile);
-    
+    //console.log(listOfAdjacentTiles);
     listOfAdjacentTiles.forEach((tile) => {
+        //console.log(tile);
         let tileBlock = document.getElementById(`${tile}`);
-        tileBlock.classList.toggle("shaken");
+        if (!tileBlock.classList.contains("fallen")) {
+            
+            tileBlock.classList.remove("up");
+            tileBlock.classList.remove("down");
+            tileBlock.classList.add("shaken");}
         
     });
 
-    console.log(listOfAdjacentTiles);
+
 
 
 };
@@ -256,46 +289,129 @@ function refreshTimeIndicator(timerTime){
 
 
         indicatorBlock.classList.add("blockIndicatorShrinking");
-        indicatorBlock.classList.toggle("shrunk");
+        indicatorBlock.classList.add("shrunk");
         setTimeout(function(){
             indicatorBlock.classList.remove("blockIndicatorShrinking");
-            indicatorBlock.classList.toggle("shrunk");
-        },timerTime);
+            indicatorBlock.classList.remove("shrunk");
+        },timerTime*0.99);
 }
 
 function getAllAdjacentTile(tileCoordinate,nextSafeTile){
-    let currentY=Math.floor(tileCoordinate/10);
-    let currentX=tileCoordinate%10;
+    let tileCoordinateInt=0;
+    let nextSafeTileInt=0;
+    //console.log("Current tile: " + tileCoordinate + ' Next one: '+ nextSafeTile);
+    if (typeof(tileCoordinate)==='string'){
+        tileCoordinateInt=parseInt(tileCoordinate[0]*10)+parseInt(tileCoordinate[1]);
+    }
+
+    else{tileCoordinateInt=tileCoordinate;}
+
+    if (typeof(nextSafeTile)==='string'){
+        nextSafeTileInt=parseInt(nextSafeTile[0]*10)+parseInt(nextSafeTile[1]);
+    }
+
+    else{nextSafeTileInt=nextSafeTile;}
+
+
+    let currentY=Math.floor(tileCoordinateInt/10);
+    let currentX=tileCoordinateInt%10;
+    //console.log(currentY +' '+currentX);
     let tileList=[];
+    
     let topLeft= (currentY>0 && currentX >0) ? (currentY-1)*10+(currentX-1) : null;
-    if (topLeft!==null && topLeft!==nextSafeTile) tileList.push(topLeft);
+    if (topLeft!==null && topLeft!==nextSafeTileInt) tileList.push(topLeft);
 
     let middleLeft= (currentX >0) ? (currentY)*10+(currentX-1) : null;
-    if (middleLeft!==null  && middleLeft!==nextSafeTile) tileList.push(middleLeft);
+    if (middleLeft!==null  && middleLeft!==nextSafeTileInt) tileList.push(middleLeft);
 
     let bottomLeft= (currentY<9 && currentX >0) ? (currentY+1)*10+(currentX-1) : null;
-    if (bottomLeft!==null && bottomLeft!==nextSafeTile) tileList.push(bottomLeft);
+    if (bottomLeft!==null && bottomLeft!==nextSafeTileInt) tileList.push(bottomLeft);
 
     let topMiddle= (currentY>0) ? (currentY-1)*10+(currentX) : null;
-    if (topMiddle!==null && topMiddle!==nextSafeTile) tileList.push(topMiddle);
+    if (topMiddle!==null && topMiddle!==nextSafeTileInt) tileList.push(topMiddle);
 
     let bottomMiddle= (currentY<9) ? (currentY+1)*10+(currentX) : null;
-    if (bottomMiddle!==null && bottomMiddle!==nextSafeTile) tileList.push(bottomMiddle);
+    if (bottomMiddle!==null && bottomMiddle!==nextSafeTileInt) tileList.push(bottomMiddle);
 
     let topRight= (currentY>0 && currentX <9) ? (currentY-1)*10+(currentX+1) : null;
-    if (topRight!==null && topRight!==nextSafeTile) tileList.push(topRight);
+    if (topRight!==null && topRight!==nextSafeTileInt) tileList.push(topRight);
 
     let middleRight= (currentX <9) ? (currentY)*10+(currentX+1) : null;
-    if (middleRight!==null && middleRight!==nextSafeTile) tileList.push(middleRight);
+    if (middleRight!==null && middleRight!==nextSafeTileInt) tileList.push(middleRight);
 
     let bottomRight= (currentY<9 && currentX <9) ? (currentY+1)*10+(currentX+1) : null;
-    if (bottomRight!==null && bottomRight!==nextSafeTile) tileList.push(bottomRight);
+    if (bottomRight!==null && bottomRight!==nextSafeTileInt) tileList.push(bottomRight);
+    
+    let finalTileList=[];
 
-    return tileList;
+    finalTileList.push(tileCoordinate);
+    tileList.forEach((tile)=>{
+        if (tile<9) {finalTileList.push(tile="0"+tile)}
+        else{finalTileList.push(tile)}
+    })
+
+    return finalTileList;
 }
 
 //This function falls the fake tiles 
-function fallFakeTiles(lastSafeTile){}
+function fallFakeTiles(lastSafeTile,nextSafeTile){
+    //We have to fall the last safe tile plus the direct adjacent tiles
+
+    let lastSafeTileInt=0;
+    let nextSafeTileInt=0;
+
+    if (typeof(lastSafeTile)==='string'){
+        lastSafeTileInt=parseInt(lastSafeTile[0]*10)+parseInt(lastSafeTile[1]);
+    }
+
+    else{lastSafeTileInt=lastSafeTile;}
+
+    if (typeof(nextSafeTile)==='string'){
+        nextSafeTileInt=parseInt(nextSafeTile[0]*10)+parseInt(nextSafeTile[1]);
+    }
+
+    else{nextSafeTileInt=nextSafeTile;}
+
+    let currentY=Math.floor(lastSafeTileInt/10);
+    let currentX=lastSafeTileInt%10;
+
+    //console.log(`lastsafeTile: ${lastSafeTile} lastSafeTileInt: ${lastSafeTileInt} y: ${currentY} x: ${currentX}`);
+
+
+    let tilesToFall =[];
+
+    let middleLeft= (currentX >0) ? (currentY)*10+(currentX-1) : null;
+    if (middleLeft!==null  && middleLeft!==nextSafeTileInt && !safePaths[safePathindex].includes(middleLeft)) tilesToFall.push(middleLeft);
+
+    let topMiddle= (currentY>0) ? (currentY-1)*10+(currentX) : null;
+    if (topMiddle!==null && topMiddle!==nextSafeTileInt && !safePaths[safePathindex].includes(topMiddle)) tilesToFall.push(topMiddle);
+
+    let bottomMiddle= (currentY<9) ? (currentY+1)*10+(currentX) : null;
+    if (bottomMiddle!==null && bottomMiddle!==nextSafeTileInt  && !safePaths[safePathindex].includes(bottomMiddle)) tilesToFall.push(bottomMiddle);
+
+    let middleRight= (currentX <9) ? (currentY)*10+(currentX+1) : null;
+    if (middleRight!==null && middleRight!==nextSafeTileInt && !safePaths[safePathindex].includes(middleRight)) tilesToFall.push(middleRight);
+    
+    let finalTilesToFall=[];
+    finalTilesToFall.push(lastSafeTile);
+
+    tilesToFall.forEach((tile)=>{
+        if (tile<9) {finalTilesToFall.push(tile="0"+tile)}
+        else{finalTilesToFall.push(tile)}
+    })
+
+    finalTilesToFall.forEach(tile => {
+        let tileBlock = document.getElementById(`${tile}`);
+        tileBlock.classList.remove("shaken");
+        tileBlock.classList.remove("up");
+        tileBlock.classList.remove("down");
+        
+        tileBlock.classList.add("fallen");
+        
+    });
+    // console.log(`Last safe tile: ${lastSafeTile} next safe: ${nextSafeTileInt}`);
+    // console.log(finalTilesToFall);
+}
 
 //FUnction to check if the player is alive
 function checkIfPlayerIsAlive(currentSafeTile){
@@ -308,30 +424,32 @@ function gameOver(){}
 
 //Arrow key eccent handlers
 function pressedForwardButton(){
-    console.log(playerAvatar.style);
-    console.log(player.x + " " + player.y);
-    player.moveForward();
-    console.log(player.x + " " + player.y);
-    updatePlayerOnBoard()
+    if (movesThisTurn<1 && areYouReady!==false){
+        player.moveForward();
+        updatePlayerOnBoard();
+        movesThisTurn++;
+    }
+    
 }
 function pressedLeftdButton(){
-    console.log("Left");
-    console.log(player.x + " " + player.y);
-    player.moveLeft();
-    console.log(player.x + " " + player.y);
-    updatePlayerOnBoard()
+    if (movesThisTurn<1 && areYouReady!==false){
+        player.moveLeft();
+        updatePlayerOnBoard();
+        movesThisTurn++;
+    }
 }
 function pressedRightdButton(){
-    console.log("Right");
-    console.log(player.x + " " + player.y);
+    if (movesThisTurn<1 && areYouReady!==false){
     player.moveRight();
-    console.log(player.x + " " + player.y);
-    updatePlayerOnBoard()
+    updatePlayerOnBoard();
+    movesThisTurn++;
+}
 }
 function pressedBackButton(){
-    console.log("BAck");
-    console.log(player.x + " " + player.y);
+    if (movesThisTurn<1 && areYouReady!==false)
+    {
     player.moveBack();
-    console.log(player.x + " " + player.y);
-    updatePlayerOnBoard()
+    updatePlayerOnBoard();
+    movesThisTurn++;
+    }
 }
