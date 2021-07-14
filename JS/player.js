@@ -8,6 +8,7 @@ class Player{
         this.name = name;
     }
 
+    
     x=0;
     y=0;
     isAlive=true;
@@ -15,6 +16,9 @@ class Player{
     //Moving towards X direction
     moveForward(){
         if(this.x<10) this.x+=1;
+        if(this.x===10) {
+            let victory = new Event('victory');
+            dispatchEvent(victory);}
     }
 
     //Moving towards negative Y direction
@@ -44,6 +48,7 @@ class Player{
 
         return playerTile;
     }
+
 
 }
 

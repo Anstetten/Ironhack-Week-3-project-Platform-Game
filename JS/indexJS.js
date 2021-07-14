@@ -39,7 +39,7 @@ let playerAvatar= document.getElementById('figure');
 let movesThisTurn =0;
 let timePerRound=1500;
 let gameIsOver = false;
-let safePathindex=4;
+let safePathindex=0;
 let stepInPath=0;
 let inTransition = false;
 let globalPlacementY=0;
@@ -53,7 +53,35 @@ const gameWonWindow=document.getElementById('gameWon');
 const readyButton=document.getElementById('readyButton');
 const restartButton=document.getElementById('restartButton');
 const counterWindow=document.getElementById('counter');
+const counterText=document.getElementById('counterText');
 const timeInfo=document.getElementById('timeInfo');
+const level=document.getElementById('level');
+const deaths=document.getElementById('deaths');
+const time=document.getElementById('time');
+let deathCounter=0;
+
+//sounds
+let soundJ=new Audio('../sounds/jump1.mp3');
+soundJ.volume=0.1;
+
+let lose=new Audio('../sounds/lose.mp3');
+lose.volume=0.2;
+
+let win=new Audio('../sounds/win.mp3');
+
+
+let click=new Audio('../sounds/click.mp3');
+click.volume=0.2;
+
+let countDown=new Audio('../sounds/countdown.mp3');
+countDown.volume=0.2;
+
+let goSound=new Audio('../sounds/go.wav');
+goSound.volume=0.2;
+
+let background=document.getElementById('backgroundMusic');
+background.volume=0.1;
+
 
 
 //these help the jump animation
@@ -84,12 +112,16 @@ window.onload=showMessageWindow;
 readyButton.onclick=startCountDown;
 restartButton.onclick=startCountDown;
 gameWonWindow.onclick=onToNextLevel;
+window.addEventListener("victory", function(event){
+    playerAvatar.classList.add('victorious');
+});
 
 
 
 
 //For setting up the visual board
 GenerateTable();
+background.play();
 
 
 //Show Message window
@@ -101,18 +133,23 @@ function showMessageWindow(){
 
 //This I need to hook up to a button
 function startCountDown(){
+    click.play();
+    playerAvatar.classList.remove('victorious');
     playerXtranslate=-100;
     playerYtranslate=600;
+    time.innerHTML=timePerRound/1000;
+    level.innerHTML=safePathindex+1;
     GenerateTable();
     let counter=3;
     movesThisTurn=1;
     messageWindow.style.visibility='hidden';
     gameOverWindow.style.visibility='hidden';
     counterWindow.style.visibility='visible';
-    counterWindow.innerHTML=counter;
+    counterText.innerHTML=counter;
+    countDown.play();
     let counterTimer= setInterval(() => {
         counter--;
-        if(counterWindow.innerHTML==="Go!!!!"){
+        if(counterText.innerHTML==="Go!"){
             clearInterval(counterTimer);
             counterWindow.style.visibility="hidden";
             startNewRound(timePerRound);
@@ -120,12 +157,14 @@ function startCountDown(){
         }
         
         else if(counter===0){
-            counterWindow.innerHTML="Go!!!!"
+            counterText.innerHTML="Go!"
+            goSound.play();
             
         }
 
         else{
-            counterWindow.innerHTML=counter;
+            countDown.play();
+            counterText.innerHTML=counter;
         }
 
         
@@ -164,7 +203,7 @@ function GenerateTable (){
     
             displayArea.appendChild(cloneBlock);}
 
-    setMovingAndGlowing();
+    //setMovingAndGlowing();
     }
     
 function setMovingAndGlowing(){
@@ -188,22 +227,17 @@ function setMovingAndGlowing(){
 
 function startNewRound(timePerRound){
 
-    //We start at the first tile of the Path
-    
     let timePerThisTurn=timePerRound;
     areYouReady=true;
+    
     //Set up game for first step of the path
     player.setStartingPosition(Math.floor(safePaths[safePathindex][stepInPath]/10), safePaths[safePathindex][stepInPath]%10);
     movesThisTurn=0;
     updatePlayerOnBoard();
-    
     playerAvatar.style.transition="transform 0.15s ease-in-out";
     shakeTiles(safePaths[safePathindex][stepInPath],stepInPath);
-    
     refreshTimeIndicator(timePerThisTurn);
 
-    //Launch setInterval here in which !!!!!!!!!!
-    ////////////////////////////////////////////////////////////////
     let timerThisTurn =setInterval(() => {
         
         movesThisTurn=0;
@@ -211,8 +245,8 @@ function startNewRound(timePerRound){
         stepInPath++;
         if(stepInPath===safePaths[safePathindex].length){
             clearInterval(timerThisTurn);
-            playerAvatar.classList.toggle('victorious');
             setTimeout(()=>{
+                win.play();
                 gameWonWindow.style.visibility="visible";
                 timeInfo.innerHTML=(timePerRound-50)/1000;
                             },800)
@@ -232,6 +266,7 @@ function startNewRound(timePerRound){
 };
 
 function onToNextLevel(){
+    click.play();
     playerAvatar.style.visibility="hidden";
     gameWonWindow.style.visibility="hidden";
     playerAvatar.style.transition="none";
@@ -241,6 +276,8 @@ function onToNextLevel(){
     player.y=0;
     stepInPath=0;
     timePerRound-=50;
+    deathCounter=0;
+    deaths.innerHTML=deathCounter;
     
     
     startCountDown();
@@ -255,7 +292,7 @@ function onToNextLevel(){
 
 //Function to update the position of the grapihical representation of the player
 function updatePlayerOnBoard(){
-    
+    soundJ.play();
     if (movesThisTurn===0){
     inTransition=true;
     let placementY=player.y*116+33;
@@ -268,7 +305,7 @@ function updatePlayerOnBoard(){
     playerXtranslate=placementX;
     globalPlacementX=placementX;
     globalPlacementY=placementY;
-
+    
     playerAvatar.style.transform=`translate3d(${placementXmiddle}px,${placementYmiddle}px,50px)`;
     setTimeout(function(){playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;},150);
 }
@@ -292,7 +329,6 @@ function shakeTiles(currentSafeTile,stepInPath){
     let listOfAdjacentTiles=getAllAdjacentTile(currentSafeTile,nextSafeTile);
     
     listOfAdjacentTiles.forEach((tile) => {
-        console.log(`The safe tile: ${currentSafeTile}. The newxt safe ${nextSafeTile} The tile to shake:${tile}`);
         let tileBlock = document.getElementById(`${tile}`);
         if (!tileBlock.classList.contains("fallen")) {
             
@@ -468,9 +504,11 @@ function checkIfPlayerIsAlive(currentSafeTile,timer){
 function gameOver(timer){
     clearInterval(timer);
     movesThisTurn=1;
-    
+    deathCounter++;
+    deaths.innerHTML=deathCounter;
     playerAvatar.style.transition="none";
     playerAvatar.style.transition="transform 2s ease-in-out";
+    lose.play();
     playerAvatar.style.transform=`translate3d(${globalPlacementX}px,${globalPlacementY}px,-800px) rotateY(-120deg) rotateX(-120deg)`;
     setTimeout(()=>{
         player.x=0;

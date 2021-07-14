@@ -2,548 +2,612 @@
     font-family: 'Eighties';
     src: url('../BACKTO1982.TTF')
   }
-  :root{
-      
-      --block-size:100px;
-      --cube_size:calc(var(--block-size)/2);
-      --sides:100px;
-      --height:10px;
-      --offset: 45px;
-      --sidesPlatform:1200px;
-      --heightPlatform:1800px;
-      --offsetPlatform: -300px;
-
-      --sidesIndicator:50px;
-      --heightIndicator:100px;
-      --offsetIndicator: -25px;
-  
-      --colorGreenVibrant:#09ff00;
-      --colorGreenDull:#0c9e06;
-  
-      --colorPurpleVibrant:#ff00f2;
-      --colorPurpleDull:#f0cfee;
-
-      --colorRedVibrant:#ff0000;
-      --colorRedDull:#c72222;
-
-      --colorBlueVibrant:#00e1ff;
-      --colorBlueDull:#00adc4;
-
-  }
-  
-  *{
-      box-sizing: border-box;
-      font-family: 'Eighties';
-  }
-  
-  #control{
-    color:white;
-    font-size: 2rem;
-    font-weight: bolder;
-    width:650px;
-    height: 300px;
-    background-color: rgba(225, 0, 255, 0.815);
-    position:absolute;
-    margin:auto;
-    z-index: 600;
-    visibility: hidden;
-  }
-
-  #gameOver{
-    color:white;
-    font-size: 2rem;
-    font-weight: bolder;
-    width:650px;
-    height: 300px;
-    background-color: rgba(0, 255, 13, 0.815);
-    position:absolute;
-    margin:auto;
-    z-index: 600;
-    visibility: hidden;
-  }
-
-  #gameWon{
-    color:white;
-    font-size: 2rem;
-    font-weight: bolder;
-    width:650px;
-    height: 300px;
-    background-color: rgba(238, 255, 0, 0.815);
-    position:absolute;
-    margin:auto;
-    z-index: 600;
-    visibility: hidden;
-  }
-
-  #counter{
-    color:white;
-    font-size: 2rem;
-    font-weight: bolder;
-    width:200x;
-    height: 200px;
-    background-color: rgba(17, 0, 255, 0.815);
-    position:absolute;
-    margin:auto;
-    z-index: 600;
-    visibility: hidden;
-  }
-
-
-  
-  body{
-    background-color: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-   
-  
-    overflow: hidden;
-    margin-left: auto;
-    margin-right: auto;
-    height: 100%;
+:root{
     
+  --block-size:100px;
+  --cube_size:calc(var(--block-size)/2);
+  --sides:100px;
+  --height:10px;
+  --offset: 45px;
+  --sidesPlatform:1200px;
+  --heightPlatform:1800px;
+  --offsetPlatform: -300px;
+
+  --sidesIndicator:50px;
+  --heightIndicator:100px;
+  --offsetIndicator: -25px;
+
+  --colorGreenVibrant:#09ff00;
+  --colorGreenDull:#0c9e06;
+
+  --colorPurpleVibrant:#ff00f2;
+  --colorPurpleDull:#f0cfee;
+
+  --colorRedVibrant:#ff0000;
+  --colorRedDull:#c72222;
+
+  --colorBlueVibrant:#00e1ff;
+  --colorBlueDull:#00adc4;
+
+  /*Counter TExt oclor*/
+
+  --colorCounterText:#eeff00;
+
   }
-  #view{
+  
+*{
+  box-sizing: border-box;
+  font-family: 'Eighties';
+  }
+  
+  /*Windows / User Interfaces*/
+.window{
+  color:white;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText), 0 0 40px var(--colorCounterText);
+  font-weight: bolder;
+  background-color: rgba(0, 0, 0, 0.363);
+  margin:auto;
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  align-content: middle;
+  justify-content: center;
+  text-align: center;
+  border-radius: 30px;
+  position:absolute;
+}
+
+audio{
+  position:absolute;
+  top:100px;
+  left:1%;
+  z-index: 8000;
+}
+
+#control{
+  
+  width:1000px;
+  height: 500px;
+  top:calc(50% - 250px);
+  left:calc(50% - 500px);
+  visibility: hidden;
+}
+
+#scoreboard{
+  font-size: 0.9rem;
+  font-weight: 100;
+  text-align: left;
+  top:1%;
+  left:1%;
+  width:300px;
+  height: 100px;
+  visibility: visible;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText);
+  letter-spacing: 3px;
+}
+
+
+button{
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top:30px;
+  color: white;
+  background-color:transparent;
+  border: 2px solid white;
+  border-radius: 7px;
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText);
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText), 0 0 40px var(--colorCounterText);
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+button:hover{
+  
+  box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText), 0 0 40px var(--colorCounterText), 0 0 50px var(--colorCounterText);
+      
+}
+
+ul{
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+#gameOver{
+  
+  font-size: 2rem;
+  top:calc(50% - 150px);
+  left:calc(50% - 325px);
+  width:650px;
+  height: 300px;
+  visibility: hidden;
+  
+}
+#gameWon{
+  font-size: 1.5rem;
+  top:calc(50% - 150px);
+  left:calc(50% - 450px);
+  width:900px;
+  height: 300px;
+  visibility: hidden;
+}
+
+#counter{
+  color:white;
+  font-size: 2rem;
+  font-weight: bolder;
+  width:200px;
+  height: 200px;
+  top:calc(50% - 100px);
+  left:calc(50% - 100px);
+  background-color: transparent;
+  visibility: hidden;
+  position:absolute;
+}
+
+#counterText{
+  font-size: 5em;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText), 0 0 40px var(--colorCounterText), 0 0 50px var(--colorCounterText), 0 0 60px var(--colorCounterText), 0 0 70px var(--colorCounterText);
+}
+
+/*//////////////////////////////////////////////////////////*/
+  
+/*The visual display*/
+body{
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  
+}
+#view{
+  position: relative;
+  top:-150px;
+}
+  
+#display{  
+    display: grid;
     position: relative;
-    top:-150px;
-  }
+    gap: 0px;
+    width: 1160px;
+    height: 1160px;
+    grid-template-columns: repeat(10,1fr);
+}
   
-  #display{
-      
-      display: grid;
-      position: relative;
-      gap: 0px;
-      width: 1160px;
-      height: 1160px;
-      grid-template-columns: repeat(10,1fr);
+#board{
+    overflow: visible;
+    transform-style: preserve-3d;
+    perspective:30000px;
+    /*transform: rotateX(60deg) rotateZ(-45deg) rotateY(0deg);*/
+    transform: rotateZ(-55deg) rotateX(40deg) rotateY(45deg) scale(0.8);
+    display: flex;
+    justify-content: flex-start;
+}
   
-  
-  }
-  
-  #board{
-      overflow: visible;
-      transform-style: preserve-3d;
-      perspective:30000px;
-      /*transform: rotateX(60deg) rotateZ(-45deg) rotateY(0deg);*/
-      transform: rotateZ(-55deg) rotateX(40deg) rotateY(45deg) scale(0.8);
-      display: flex;
-      justify-content: flex-start;
-  }
-  
-  
+  /*//////////////////////////////////////////////////////////*/
 
+  /*Cube representing the player*/
   
-  #figure{
-      
-      position: absolute;
-      z-index: 8;
-      transform-style: preserve-3d;
-      transform: translate3d(-100px,600px,35px);
-      /* transform: translateZ(25px) translateY(32px) translateX(32px); */
-      /* transition: transform 0.2s ease-in-out; */
-  
-  }
+#figure{
+    position: absolute;
+    z-index: 8;
+    transform-style: preserve-3d;
+    transform: translate3d(-100px,600px,35px);
 
-  #figure.fallen{
-    transition: transform 2s ease-in-out;
-  }
+}
+
+#figure.fallen{
+  transition: transform 2s ease-in-out;
+}
 
 
 
+.figureSide{
+    position: absolute;
+    width:var(--cube_size);
+    height: var(--cube_size);
+    background-color: black;
+    border:2px solid #fbff00;
     
-  .figureSide{
-      position: absolute;
-      width:var(--cube_size);
-      height: var(--cube_size);
-      background-color: black;
-      border:2px solid #fbff00;
-      
-  }
-  
-  #figure_front{
-      transform: rotateY(0deg) translateZ(calc(var(--cube_size)/2));
-  }
-  
-  #figure_right{
-      background-color: red;
-      transform: rotateY(90deg) translateZ(calc(var(--cube_size)/2));
-  }
-  
-  #figure_back{
-      transform:rotateY(180deg) translateZ(calc(var(--cube_size)/2));
-  }
-  
-  #figure_left{
-  
-      transform:rotateY(-90deg) translateZ(calc(var(--cube_size)/2));
-  }
-  
-  #figure_top{
-      transform:rotateX(90deg) translateZ(calc(var(--cube_size)/2));
-  }
-  
-  #figure_bottom{
-      transform:rotateX(-90deg) translateZ(calc(var(--cube_size)/2));
-  }
-      
-  
-  .block{
-      margin:8px;
-      width:var(--sides);
-      height:var(--sides);
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 2.5s linear;
-      
-    }
-  
-    .block.up{
-      transform: translateZ(5px);
-    }
+}
 
-    .block.down{
-        transform: translateZ(-5px);
-      }
+#figure.victorious>.figureSide{
+  border:2px solid #00ff15;
+  box-shadow: 0px 0px 10px #00ff15 inset;
+}
 
-    .block.move{
-      animation: moves 5s infinite linear;
-    }
+#figure_front{
+    transform: rotateY(0deg) translateZ(calc(var(--cube_size)/2));
+}
 
-    @keyframes moves{
-      0% {transform: translateZ(0px);}
-      25% {transform: translateZ(5px);}
-      50% {transform: translateZ(0px);}
-      50% {transform: translateZ(-5px);}
-      100% {transform: translateZ(0px);}
+#figure_right{
+    background-color: red;
+    transform: rotateY(90deg) translateZ(calc(var(--cube_size)/2));
+}
 
-    }
+#figure_back{
+    transform:rotateY(180deg) translateZ(calc(var(--cube_size)/2));
+}
+  
+#figure_left{
+
+    transform:rotateY(-90deg) translateZ(calc(var(--cube_size)/2));
+}
+
+#figure_top{
+    transform:rotateX(90deg) translateZ(calc(var(--cube_size)/2));
+}
+
+#figure_bottom{
+    transform:rotateX(-90deg) translateZ(calc(var(--cube_size)/2));
+}
+/*//////////////////////////////////////////////////////////*/
+
+/*Blocks representing the tiles*/
+  
+.block{
+  margin:8px;
+  width:var(--sides);
+  height:var(--sides);
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 2.5s linear;
+  
+}
+  
+.block.up{
+  transform: translateZ(5px);
+}
+
+.block.down{
+    transform: translateZ(-5px);
+  }
+
+.block.move{
+  animation: moves 5s infinite linear;
+}
+
+@keyframes moves{
+  0% {transform: translateZ(0px);}
+  25% {transform: translateZ(5px);}
+  50% {transform: translateZ(0px);}
+  50% {transform: translateZ(-5px);}
+  100% {transform: translateZ(0px);}
+
+}
   
     
-    #front{
-      width:var(--sides);
-      height:var(--sides);
-      position: absolute;
-      transform: translateZ(calc(var(--height)/2));
-    }
+#front{
+  width:var(--sides);
+  height:var(--sides);
+  position: absolute;
+  transform: translateZ(calc(var(--height)/2));
+}
+
+#back{
+  width:var(--sides);
+  height:var(--sides);
+  position: absolute;
+  transform: rotateY(180deg) translateZ(calc(var(--height)/2));
+}
+
+#left{
+  width:var(--height);
+  height:var(--sides);
+  position: absolute;
+  left:var(--offset);
+  transform: rotateY(-90deg) translateZ(calc(var(--sides)/2));
+}
+
+#right{
+  width:var(--height);
+  height:var(--sides);
+  position: absolute;
+  left:var(--offset);
+  transform: rotateY( 90deg) translateZ(calc(var(--sides)/2));
+}
     
-    #back{
-      width:var(--sides);
-      height:var(--sides);
-      position: absolute;
-      transform: rotateY(180deg) translateZ(calc(var(--height)/2));
-    }
+#top{
+  width:var(--sides);
+  height:var(--height);
+  position: absolute;
+  top:var(--offset);
+  transform: rotateX(90deg) translateZ(calc(var(--sides)/2));
+}
+
+#bottom{
+  width:var(--sides);
+  height:var(--height);
+  position: absolute;
+  top:var(--offset);
+  transform: rotateX(-90deg) translateZ(calc(var(--sides)/2));
+}
     
-    #left{
-      width:var(--height);
-      height:var(--sides);
-      position: absolute;
-      left:var(--offset);
-      transform: rotateY(-90deg) translateZ(calc(var(--sides)/2));
-    }
+.face.big {
+  background-color:black;
+  box-shadow: 0px 0px 25px #ff00f2 inset;
+  border:1px solid white;
+  transition: box-shadow 2.5s ease-in-out;
+  /* animation: pulseTopSidePurple 2s infinite; */
+}
+
+.face.big.dull{
+  /* box-shadow: 0px 0px 35px var(--colorPurpleDull) inset; */
+  animation: dullBshadow 5s 1 ease-in-out;
+
+}
+
+.face.small {
+  background-color:#f722de;
+  border:1px solid white;
+  transition: background-color 2.5s ease-in-out;
+  /* animation: pulseSidePurple 2s infinite; */
+}
+
+.face.small.dull{
+  animation: dullBbcolor 5s 1 ease-in-out;
+  /* background-color:var(--colorPurpleDull); */
+}
+
+@keyframes dullBshadow{
+  0% {}
+  50% {box-shadow: 0px 0px 35px var(--colorPurpleDull) inset;}
+  100% {}
+}
+
+@keyframes dullBbcolor{
+  0% {}
+  50% {background-color:var(--colorPurpleDull);}
+  100% {}
+}
+
+.block.fallen{
+
+}
+
+
+.block.shaken{
+    animation: shake 0.3s infinite alternate-reverse;
     
-    #right{
-      width:var(--height);
-      height:var(--sides);
-      position: absolute;
-      left:var(--offset);
-      transform: rotateY( 90deg) translateZ(calc(var(--sides)/2));
-    }
-    
-    #top{
-      width:var(--sides);
-      height:var(--height);
-      position: absolute;
-      top:var(--offset);
-      transform: rotateX(90deg) translateZ(calc(var(--sides)/2));
-    }
-    
-    #bottom{
-      width:var(--sides);
-      height:var(--height);
-      position: absolute;
-      top:var(--offset);
-      transform: rotateX(-90deg) translateZ(calc(var(--sides)/2));
-    }
-    
-    .face.big {
-      background-color:black;
-      box-shadow: 0px 0px 25px #ff00f2 inset;
-      border:1px solid white;
-      transition: box-shadow 2.5s ease-in-out;
-      /* animation: pulseTopSidePurple 2s infinite; */
-    }
+}
+
+@keyframes shake{
+  0% {transform:rotateZ(0deg)}
+  50% {transform:rotateZ(9deg)}
+  100% {transform:rotateZ(-9deg)}
   
-    .face.big.dull{
-      /* box-shadow: 0px 0px 35px var(--colorPurpleDull) inset; */
-      animation: dullBshadow 5s 1 ease-in-out;
+}
+
+/*//////////////////////////////////////////////////////////*/
+
+/*Platforms on two sides of the view*/
+#scenePlatform{
+  width:auto;
+  height:auto;
+}
+
+#blockPlatform{
+
+  width:var(--sidesPlatform);
+  height:var(--sidesPlatform);
+  position: relative;
+  top:-20px;
+  transform-style: preserve-3d;
+  transform:translateZ(calc(var(--heightPlatform)/-2));
   
-    }
-    
-    .face.small {
-      background-color:#f722de;
-      border:1px solid white;
-      transition: background-color 2.5s ease-in-out;
-      /* animation: pulseSidePurple 2s infinite; */
-    }
+}
+      
+#frontPlatform{
+  width:var(--sidesPlatform);
+  height:var(--sidesPlatform);
+  position: absolute;
+  transform: translateZ(calc(var(--heightPlatform)/2));
+}
+
+#backPlatform{
+  width:var(--sidesPlatform);
+  height:var(--sidesPlatform);
+  position: absolute;
+  transform: rotateY(180deg) translateZ(calc(var(--heightPlatform)/2));
+}
+
+#leftPlatform{
+  width:var(--heightPlatform);
+  height:var(--sidesPlatform);
+  position: absolute;
+  left:var(--offsetPlatform);
+  transform: rotateY(-90deg) translateZ(calc(var(--sidesPlatform)/2));
+}
+
+#rightPlatform{
+  width:var(--heightPlatform);
+  height:var(--sidesPlatform);
+  position: absolute;
+  left:var(--offsetPlatform);
+  transform: rotateY( 90deg) translateZ(calc(var(--sidesPlatform)/2));
+}
+
+#topPlatform{
+  width:var(--sidesPlatform);
+  height:var(--heightPlatform);
+  position: absolute;
+  top:var(--offsetPlatform);
+  transform: rotateX(90deg) translateZ(calc(var(--sidesPlatform)/2));
+}
+
+#bottomPlatform{
+  width:var(--sidesPlatform);
+  height:var(--heightPlatform);
+  position: absolute;
+  top:var(--offsetPlatform);
+  transform: rotateX(-90deg) translateZ(calc(var(--sidesPlatform)/2));
+}
+
+.facePlatform.left {
+  background-color:black;
+  box-shadow: 0px 0px 200px #ff0000 inset;
+  border:3px solid white;
+  animation: pulseRedPlatform 8s infinite;
+}
+
+.facePlatform.right {
+  background-color:black;
+  box-shadow: 0px 0px 200px #00e1ff inset;
+  border:3px solid white;
+  animation: pulseRidePlatform 8s infinite;
+}
+/*//////////////////////////////////////////////////////////*/
+
+/*Green rotating block*/
+.block.green{
+  position: absolute;
+  top: -250px;
+  left:500px;
+  animation: rotate 15s infinite linear;
+}
   
-    .face.small.dull{
-      animation: dullBbcolor 5s 1 ease-in-out;
-      /* background-color:var(--colorPurpleDull); */
-    }
+.face.green.big {
+  background-color:black;
+  box-shadow: 0px 0px 25px #09ff00 inset;
+  border:1px solid white;
+  animation: pulseTopSide 4s infinite;
+}
 
-    @keyframes dullBshadow{
-      0% {}
-      50% {box-shadow: 0px 0px 35px var(--colorPurpleDull) inset;}
-      100% {}
-    }
+.face.green.small {
+  background-color:#09ff00;
+  border:1px solid white;
+  animation: pulseSide 4s infinite;
+}
+/*//////////////////////////////////////////////////////////*/
 
-    @keyframes dullBbcolor{
-      0% {}
-      50% {background-color:var(--colorPurpleDull);}
-      100% {}
-    }
+/*Indicator*/
 
-     .block.fallen{
-
-      }
-
-
-      .block.shaken{
-          animation: shake 0.3s infinite alternate-reverse;
-          
-      }
-
-      @keyframes shake{
-        0% {transform:rotateZ(0deg)}
-        50% {transform:rotateZ(9deg)}
-        100% {transform:rotateZ(-9deg)}
-        
-    }
+.blockIndicator{
   
+  width:var(--sidesIndicator);
+  height:var(--heightIndicator);
+  position: absolute;
+  top:25px;
+  left:25px;
+  transform-style: preserve-3d;
+  transition: transform 0s linear;
+  transform: translateZ(60px) scaleZ(1)
+}
+.blockIndicatorShrinking{
+  
+  width:var(--sidesIndicator);
+  height:var(--heightIndicator);
+  position: absolute;
+  top:25px;
+  left:25px;
+  transform-style: preserve-3d;
+  transition: transform 1s linear;
+  transform: translateZ(60px) scaleZ(1)
+} 
 
-    /*Platforms*/
-      #scenePlatform{
-        width:auto;
-        height:auto;
-      }
-  
-  
-      
-      #blockPlatform{
-   
-        width:var(--sidesPlatform);
-        height:var(--sidesPlatform);
-        position: relative;
-        top:-20px;
-        transform-style: preserve-3d;
-        transform:translateZ(calc(var(--heightPlatform)/-2));
-        
-      }
-      
-      #frontPlatform{
-        width:var(--sidesPlatform);
-        height:var(--sidesPlatform);
-        position: absolute;
-        transform: translateZ(calc(var(--heightPlatform)/2));
-      }
-      
-      #backPlatform{
-        width:var(--sidesPlatform);
-        height:var(--sidesPlatform);
-        position: absolute;
-        transform: rotateY(180deg) translateZ(calc(var(--heightPlatform)/2));
-      }
-      
-      #leftPlatform{
-        width:var(--heightPlatform);
-        height:var(--sidesPlatform);
-        position: absolute;
-        left:var(--offsetPlatform);
-        transform: rotateY(-90deg) translateZ(calc(var(--sidesPlatform)/2));
-      }
-      
-      #rightPlatform{
-        width:var(--heightPlatform);
-        height:var(--sidesPlatform);
-        position: absolute;
-        left:var(--offsetPlatform);
-        transform: rotateY( 90deg) translateZ(calc(var(--sidesPlatform)/2));
-      }
-      
-      #topPlatform{
-        width:var(--sidesPlatform);
-        height:var(--heightPlatform);
-        position: absolute;
-        top:var(--offsetPlatform);
-        transform: rotateX(90deg) translateZ(calc(var(--sidesPlatform)/2));
-      }
-      
-      #bottomPlatform{
-        width:var(--sidesPlatform);
-        height:var(--heightPlatform);
-        position: absolute;
-        top:var(--offsetPlatform);
-        transform: rotateX(-90deg) translateZ(calc(var(--sidesPlatform)/2));
-      }
-      
-      .facePlatform.left {
-        background-color:black;
-        box-shadow: 0px 0px 200px #ff0000 inset;
-        border:3px solid white;
-        animation: pulseRedPlatform 8s infinite;
-      }
-  
-      .facePlatform.right {
-        background-color:black;
-        box-shadow: 0px 0px 200px #00e1ff inset;
-        border:3px solid white;
-        animation: pulseRidePlatform 8s infinite;
-      }
-  
-      /*Green rotating block*/
-      .block.green{
-        position: absolute;
-        top: -250px;
-        left:500px;
-        animation: rotate 15s infinite linear;
-      }
-  
-      .face.green.big {
-        background-color:black;
-        box-shadow: 0px 0px 25px #09ff00 inset;
-        border:1px solid white;
-        animation: pulseTopSide 4s infinite;
-      }
-      
-      .face.green.small {
-        background-color:#09ff00;
-        border:1px solid white;
-        animation: pulseSide 4s infinite;
-      }
-  
-      /*Indicator*/
+.blockIndicator.shrunk{
+    transform: translateZ(60px) scaleZ(0);
+}
 
-      .blockIndicator{
-        
-        width:var(--sidesIndicator);
-        height:var(--heightIndicator);
-        position: absolute;
-        top:25px;
-        left:25px;
-        transform-style: preserve-3d;
-        transition: transform 0s linear;
-        transform: translateZ(60px) scaleZ(1)
-      }
-      .blockIndicatorShrinking{
-        
-        width:var(--sidesIndicator);
-        height:var(--heightIndicator);
-        position: absolute;
-        top:25px;
-        left:25px;
-        transform-style: preserve-3d;
-        transition: transform 1s linear;
-        transform: translateZ(60px) scaleZ(1)
-      } 
+#frontIndicator{
+  width:var(--sidesIndicator);
+  height:var(--sidesIndicator);
+  position: absolute;
+  transform: translateZ(calc(var(--heightIndicator)/2));
+}
 
-      .blockIndicator.shrunk{
-          transform: translateZ(60px) scaleZ(0);
-      }
-      
-      #frontIndicator{
-        width:var(--sidesIndicator);
-        height:var(--sidesIndicator);
-        position: absolute;
-        transform: translateZ(calc(var(--heightIndicator)/2));
-      }
-      
-      #backIndicator{
-        width:var(--sidesIndicator);
-        height:var(--sidesIndicator);
-        position: absolute;
-        transform: rotateY(180deg) translateZ(calc(var(--heightIndicator)/2));
-      }
-      
-      #leftIndicator{
-        width:var(--heightIndicator);
-        height:var(--sidesIndicator);
-        position: absolute;
-        left:var(--offsetIndicator);
-        transform: rotateY(-90deg) translateZ(calc(var(--sidesIndicator)/2));
-      }
-      
-      #rightIndicator{
-        width:var(--heightIndicator);
-        height:var(--sidesIndicator);
-        position: absolute;
-        left:var(--offsetIndicator);
-        transform: rotateY( 90deg) translateZ(calc(var(--sidesIndicator)/2));
-      }
-      
-      #topIndicator{
-        width:var(--sidesIndicator);
-        height:var(--heightIndicator);
-        position: absolute;
-        top:var(--offsetIndicator);
-        transform: rotateX(90deg) translateZ(calc(var(--sidesIndicator)/2));
-      }
-      
-      #bottomIndicator{
-        width:var(--sidesIndicator);
-        height:var(--heightIndicator);
-        position: absolute;
-        top:var(--offsetIndicator);
-        transform: rotateX(-90deg) translateZ(calc(var(--sidesIndicator)/2));
-      }
+#backIndicator{
+  width:var(--sidesIndicator);
+  height:var(--sidesIndicator);
+  position: absolute;
+  transform: rotateY(180deg) translateZ(calc(var(--heightIndicator)/2));
+}
 
-      .face.indicator {
-        background-color:black;
-        box-shadow: 0px 0px 25px #09ff00 inset;
-        border:1px solid white;
-        /* animation: pulseTopSide 2s infinite; */
-      }
-      
-      .face.indicator.small {
-        background-color:#09ff00;
-        border:1px solid white;
-        /* animation: pulseSide 2s infinite; */
-      }
+#leftIndicator{
+  width:var(--heightIndicator);
+  height:var(--sidesIndicator);
+  position: absolute;
+  left:var(--offsetIndicator);
+  transform: rotateY(-90deg) translateZ(calc(var(--sidesIndicator)/2));
+}
+
+#rightIndicator{
+  width:var(--heightIndicator);
+  height:var(--sidesIndicator);
+  position: absolute;
+  left:var(--offsetIndicator);
+  transform: rotateY( 90deg) translateZ(calc(var(--sidesIndicator)/2));
+}
+
+#topIndicator{
+  width:var(--sidesIndicator);
+  height:var(--heightIndicator);
+  position: absolute;
+  top:var(--offsetIndicator);
+  transform: rotateX(90deg) translateZ(calc(var(--sidesIndicator)/2));
+}
+
+#bottomIndicator{
+  width:var(--sidesIndicator);
+  height:var(--heightIndicator);
+  position: absolute;
+  top:var(--offsetIndicator);
+  transform: rotateX(-90deg) translateZ(calc(var(--sidesIndicator)/2));
+}
+
+.face.indicator {
+  background-color:black;
+  box-shadow: 0px 0px 25px #09ff00 inset;
+  border:1px solid white;
+}
+
+.face.indicator.small {
+  background-color:#09ff00;
+  border:1px solid white;
+}
+/*//////////////////////////////////////////////////////////*/
 
 
-      /*Animations*/
+/*Animations*/
+
+@keyframes rotate{
+  0% {transform:rotateZ(0deg)}
+  25% {transform:rotateZ(90deg)}
+  50% {transform:rotateZ(180deg)}
+  75% {transform:rotateZ(270deg)}
+  100% {transform:rotateZ(360deg)}
+}
+
+@keyframes pulseTopSide{
+  0% {box-shadow: 0px 0px 35px var(--colorGreenVibrant) inset;}
+  50% {box-shadow: 0px 0px 10px var(--colorGreenDull) inset;}
+  100% {box-shadow: 0px 0px 35px var(--colorGreenVibrant) inset;}
+}
+
+@keyframes pulseSide{
+  0% {background-color:var(--colorGreenVibrant);}
+  50% {background-color:var(--colorGreenDull);}
+  100% {background-color:var(--colorGreenVibrant);}
+}
 
 
-      @keyframes rotate{
-        0% {transform:rotateZ(0deg)}
-        25% {transform:rotateZ(90deg)}
-        50% {transform:rotateZ(180deg)}
-        75% {transform:rotateZ(270deg)}
-        100% {transform:rotateZ(360deg)}
-      }
-  
-      @keyframes pulseTopSide{
-        0% {box-shadow: 0px 0px 35px var(--colorGreenVibrant) inset;}
-        50% {box-shadow: 0px 0px 10px var(--colorGreenDull) inset;}
-        100% {box-shadow: 0px 0px 35px var(--colorGreenVibrant) inset;}
-      }
-  
-      @keyframes pulseSide{
-        0% {background-color:var(--colorGreenVibrant);}
-        50% {background-color:var(--colorGreenDull);}
-        100% {background-color:var(--colorGreenVibrant);}
-      }
-  
-  
-      @keyframes pulseRedPlatform{
-        0% {box-shadow: 0px 0px 200px var(--colorRedVibrant) inset;}
-        50% {box-shadow: 0px 0px 150px var(--colorRedDull) inset;}
-        100% {box-shadow: 0px 0px 200px var(--colorRedVibrant) inset;}
-      }
-  
-      @keyframes pulseRidePlatform{
-        0% {box-shadow: 0px 0px 200px var(--colorBlueVibrant) inset;}
-        50% {box-shadow: 0px 0px 150px var(--colorBlueDull) inset;}
-        100% {box-shadow: 0px 0px 200px var(--colorBlueVibrant) inset;}
-      }
+@keyframes pulseRedPlatform{
+  0% {box-shadow: 0px 0px 200px var(--colorRedVibrant) inset;}
+  50% {box-shadow: 0px 0px 150px var(--colorRedDull) inset;}
+  100% {box-shadow: 0px 0px 200px var(--colorRedVibrant) inset;}
+}
+
+@keyframes pulseRidePlatform{
+  0% {box-shadow: 0px 0px 200px var(--colorBlueVibrant) inset;}
+  50% {box-shadow: 0px 0px 150px var(--colorBlueDull) inset;}
+  100% {box-shadow: 0px 0px 200px var(--colorBlueVibrant) inset;}
+}
+
+/*//////////////////////////////////////////////////////////*/
       
   
