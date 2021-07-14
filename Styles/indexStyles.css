@@ -127,6 +127,10 @@ ul{
   text-align: left;
 }
 
+li{
+  margin: 3px 0;
+}
+
 #gameOver{
   
   font-size: 2rem;
