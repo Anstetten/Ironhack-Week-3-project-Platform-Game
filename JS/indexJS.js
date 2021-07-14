@@ -37,9 +37,9 @@ const safePaths=[
 let player = new Player('Zsolt');
 let playerAvatar= document.getElementById('figure');
 let movesThisTurn =0;
-let timePerRound=2000;
+let timePerRound=1500;
 let gameIsOver = false;
-let safePathindex=0;
+let safePathindex=4;
 let stepInPath=0;
 let inTransition = false;
 let globalPlacementY=0;
@@ -60,9 +60,7 @@ const timeInfo=document.getElementById('timeInfo');
 let playerXtranslate=-100;
 let playerYtranslate=600;
 let areYouReady=false;
-playerAvatar.addEventListener('transitionend',()=>{
-    console.log(`I am transitioned`);
-})
+
 
 
 //Events and eventhandlers
@@ -92,7 +90,7 @@ gameWonWindow.onclick=onToNextLevel;
 
 //For setting up the visual board
 GenerateTable();
-//setMovingAndGlowing();
+
 
 //Show Message window
 function showMessageWindow(){
@@ -103,6 +101,8 @@ function showMessageWindow(){
 
 //This I need to hook up to a button
 function startCountDown(){
+    playerXtranslate=-100;
+    playerYtranslate=600;
     GenerateTable();
     let counter=3;
     movesThisTurn=1;
@@ -163,27 +163,23 @@ function GenerateTable (){
 
     
             displayArea.appendChild(cloneBlock);}
+
+    setMovingAndGlowing();
     }
     
 function setMovingAndGlowing(){
-    let blocks = document.querySelectorAll('.block:not(.green)');
+    let blocks = document.querySelectorAll('.block:not(.green):not(.fallen)');
     setInterval(function(){
         for (let i=0; i<5;i++){
             let randomIndex= Math.floor(Math.random()*blocks.length);
-            blocks[randomIndex].classList.toggle('move');
-            // setTimeout(function(){
-            //     blocks[randomIndex].classList.toggle('up');
-            //     blocks[randomIndex].classList.toggle('down');
-            //     setTimeout(function(){
-            //         blocks[randomIndex].classList.toggle('down');
-            //         },2500);
+            if(!blocks[randomIndex].classList.contains("fallen"))
+            {blocks[randomIndex].classList.toggle('move');}
 
-            //     },2500);
         
             let faces = blocks[randomIndex].querySelectorAll('.face');
             Array.from(faces).forEach((face)=>{
                 face.classList.toggle('dull');
-                //setTimeout(function(){face.classList.toggle('dull');},2500);
+                
             })
         }
     },3000);
@@ -246,6 +242,7 @@ function onToNextLevel(){
     stepInPath=0;
     timePerRound-=50;
     
+    
     startCountDown();
 }
 
@@ -295,12 +292,12 @@ function shakeTiles(currentSafeTile,stepInPath){
     let listOfAdjacentTiles=getAllAdjacentTile(currentSafeTile,nextSafeTile);
     
     listOfAdjacentTiles.forEach((tile) => {
-        
+        console.log(`The safe tile: ${currentSafeTile}. The newxt safe ${nextSafeTile} The tile to shake:${tile}`);
         let tileBlock = document.getElementById(`${tile}`);
         if (!tileBlock.classList.contains("fallen")) {
             
-            //tileBlock.classList.remove("up");
-            //tileBlock.classList.remove("down");
+            tileBlock.classList.remove("up");
+            tileBlock.classList.remove("down");
             tileBlock.classList.add("shaken");}
         
     });
@@ -378,7 +375,7 @@ function getAllAdjacentTile(tileCoordinate,nextSafeTile){
 
     finalTileList.push(tileCoordinate);
     tileList.forEach((tile)=>{
-        if (tile<9) {finalTileList.push(tile="0"+tile)}
+        if (tile<10) {finalTileList.push(tile="0"+tile)}
         else{finalTileList.push(tile)}
     })
 
@@ -428,18 +425,22 @@ function fallFakeTiles(lastSafeTile,nextSafeTile){
     finalTilesToFall.push(lastSafeTile);
 
     tilesToFall.forEach((tile)=>{
-        if (tile<9) {finalTilesToFall.push(tile="0"+tile)}
+        if (tile<10) {finalTilesToFall.push(tile="0"+tile)}
         else{finalTilesToFall.push(tile)}
     })
 
     finalTilesToFall.forEach(tile => {
         let tileBlock = document.getElementById(`${tile}`);
         tileBlock.classList.remove("shaken");
-        // tileBlock.classList.remove("up");
-        // tileBlock.classList.remove("down");
-        // tileBlock.classList.remove("move");
-        
+        tileBlock.classList.remove("move");
+        tileBlock.style.transform="transform:rotateZ(0deg)";
         tileBlock.classList.add("fallen");
+        tileBlock.style.transition="none";
+        ;
+        setTimeout(()=>{    
+            tileBlock.style.transition="transform 2s ease-in-out";        
+            tileBlock.style.transform=`translate3d(0px,0px,-1200px) rotateZ(0deg) rotateY(-120deg) rotateX(-120deg)`;},50)
+        
         
     });
     // console.log(`Last safe tile: ${lastSafeTile} next safe: ${nextSafeTileInt}`);
@@ -451,8 +452,6 @@ function checkIfPlayerIsAlive(currentSafeTile,timer){
     let playerTile=player.getTile();
     
     let safeTile= currentSafeTile+"";
-
-    console.log(`player til: ${playerTile}  safe: ${safeTile}`);
 
     if(playerTile===safeTile){
         //Game can go on
