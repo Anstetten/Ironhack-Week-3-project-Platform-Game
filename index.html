@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="./Styles/indexStyles.css">
 </head>
 <body>
-    <audio
+
+    <div id="wrapper">
+        <audio
         controls
         autoplay
         id="backgroundMusic"
@@ -16,48 +18,51 @@
         src="./sounds/Skjalg-A-Skagen-Decades.mp3">
             Your browser does not support the
             <code>audio</code> element.
-    </audio>
-    <div id="scoreboard" class="window">
-        <p>
-            Level: <span id="level">1</span><br>
-            Deaths: <span id="deaths">0</span><br>
-            Time per turn: <span id="time"></span> s<br>
-        </p>
-        
-     
-        
-    </div>
+        </audio>
 
-    <div id="control" class="window">
-        <h1>Welcome to Neon-Synth City</h1>
-        <p>The rules are simple. In order to win:<br>
-        <ul>
-            <li>You have to get from the red platform to the blue platform</li>
-            <li>You have to jump on the tiles. But be aware. There is only one safe path</li>
-            <li>The game is played in turns. Each turn you can only jump once</li>
-            <li>Each turn you have limited time to move. The time is indicated with the green column</li>
-            <li>If you jump on a fake tile. You fall</li>
-            <li>The shaking tiles are not safe....</li>
-        </ul> Are you ready to play?</p>
-        
-        <button id='readyButton'>I am ready</button>
-    </div>
+        <div id="scoreboard" class="window">
+            <p>
+                Level: <span id="level">1</span><br>
+                Deaths: <span id="deaths">0</span><br>
+                Time per turn: <span id="time"></span> s<br>
+            </p>
+            
+         
+            
+        </div>
+    
+        <div id="control" class="window">
+            <h1>Welcome to Neon-Synth City</h1>
+            <p>The rules are simple. In order to win:<br>
+            <ul>
+                <li>You have to get from the red platform to the blue platform</li>
+                <li>You have to jump on the tiles. But be aware. There is only one safe path</li>
+                <li>The game is played in turns. Each turn you can only jump once</li>
+                <li>Each turn you have limited time to move. The time is indicated with the green column</li>
+                <li>If you jump on a fake tile. You fall</li>
+                <li>The shaking tiles are not safe....</li>
+            </ul> Are you ready to play?</p>
+            
+            <button id='readyButton'>I am ready</button>
+        </div>
+    
+        <div id="gameOver" class="window">
+            Yeah....You're kinda dead.<br> Wanna go again? :) 
+            <button id='restartButton'>Yes, I do</button>
+        </div>
+    
+        <div id="gameWon" class="window">
+            <p>
+            Congratulations. Do you wanna go again? :)<br>
+            But now you will have only: <br><span id="timeInfo"></span>s <br> to move per turn
+            </p>
+            <button id='restartButton'>Yes. Let's move on</button>
+        </div>
+    
+        <div id="counter" class="window">
+            <span id="counterText"></span>
+        </div>
 
-    <div id="gameOver" class="window">
-        Yeah....You're kinda dead. Wanna go again? :) 
-        <button id='restartButton'>Yes, I do</button>
-    </div>
-
-    <div id="gameWon" class="window">
-        <p>
-        Congratulations. Do you wanna go again? :)<br>
-        But now you will have only: <br><span id="timeInfo"></span>s <br> to move per turn
-        </p>
-        <button id='restartButton'>Yes. Let's move on</button>
-    </div>
-
-    <div id="counter" class="window">
-        <span id="counterText"></span>
     </div>
 
     <div id="view">

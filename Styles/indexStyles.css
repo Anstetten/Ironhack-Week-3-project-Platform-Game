@@ -55,32 +55,47 @@
   text-align: center;
   border-radius: 30px;
   position:absolute;
+  
 }
+
+#wrapper{
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top:0%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  z-index: 550;
+}
+
 
 audio{
   position:absolute;
   top:100px;
   left:1%;
-  z-index: 8000;
+  z-index: 800;
 }
 
 #control{
   
-  width:1000px;
-  height: 500px;
-  top:calc(50% - 250px);
-  left:calc(50% - 500px);
+  /* width:1000px;
+  height: 500px; */
+  height: fit-content;
+  width: 50%;
   visibility: hidden;
 }
 
 #scoreboard{
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 100;
   text-align: left;
   top:1%;
   left:1%;
-  width:300px;
-  height: 100px;
+  width:auto;
+  height: auto;
   visibility: visible;
   text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText);
   letter-spacing: 3px;
@@ -115,19 +130,15 @@ ul{
 #gameOver{
   
   font-size: 2rem;
-  top:calc(50% - 150px);
-  left:calc(50% - 325px);
-  width:650px;
-  height: 300px;
+  width:fit-content;
+  height: fit-content;
   visibility: hidden;
   
 }
 #gameWon{
   font-size: 1.5rem;
-  top:calc(50% - 150px);
-  left:calc(50% - 450px);
-  width:900px;
-  height: 300px;
+  width:fit-content;
+  height: fit-content;
   visibility: hidden;
 }
 
@@ -135,10 +146,8 @@ ul{
   color:white;
   font-size: 2rem;
   font-weight: bolder;
-  width:200px;
-  height: 200px;
-  top:calc(50% - 100px);
-  left:calc(50% - 100px);
+  width:fit-content;
+  height: fit-content;
   background-color: transparent;
   visibility: hidden;
   position:absolute;
@@ -157,6 +166,7 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
+  align-content: center;
   
 
   overflow: hidden;

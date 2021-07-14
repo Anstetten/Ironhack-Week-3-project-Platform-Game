@@ -109,7 +109,10 @@ window.addEventListener("keydown", function (event){
         }
 });
 window.onload=showMessageWindow;
-readyButton.onclick=startCountDown;
+readyButton.onclick=function(){
+    background.play();
+    startCountDown();
+}
 restartButton.onclick=startCountDown;
 gameWonWindow.onclick=onToNextLevel;
 window.addEventListener("victory", function(event){
@@ -202,7 +205,7 @@ function GenerateTable (){
 
     
             displayArea.appendChild(cloneBlock);}
-            background.play();
+            
 
     //setMovingAndGlowing();
     }
