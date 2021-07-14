@@ -61,22 +61,22 @@ const time=document.getElementById('time');
 let deathCounter=0;
 
 //sounds
-let soundJ=new Audio('../sounds/jump1.mp3');
+let soundJ=new Audio('sounds/jump1.mp3');
 soundJ.volume=0.1;
 
-let lose=new Audio('../sounds/lose.mp3');
+let lose=new Audio('sounds/lose.mp3');
 lose.volume=0.2;
 
-let win=new Audio('../sounds/win.mp3');
+let win=new Audio('sounds/win.mp3');
 
 
-let click=new Audio('../sounds/click.mp3');
+let click=new Audio('sounds/click.mp3');
 click.volume=0.2;
 
-let countDown=new Audio('../sounds/countdown.mp3');
+let countDown=new Audio('sounds/countdown.mp3');
 countDown.volume=0.2;
 
-let goSound=new Audio('../sounds/go.wav');
+let goSound=new Audio('sounds/go.wav');
 goSound.volume=0.2;
 
 let background=document.getElementById('backgroundMusic');
@@ -121,7 +121,7 @@ window.addEventListener("victory", function(event){
 
 //For setting up the visual board
 GenerateTable();
-background.play();
+
 
 
 //Show Message window
@@ -202,6 +202,7 @@ function GenerateTable (){
 
     
             displayArea.appendChild(cloneBlock);}
+            background.play();
 
     //setMovingAndGlowing();
     }
