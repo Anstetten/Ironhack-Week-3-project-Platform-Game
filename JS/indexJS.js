@@ -222,7 +222,7 @@ function GenerateTable (){
     let blocks = document.querySelectorAll('.block:not(.green)');
     playerAvatar.classList.remove("fallen");
     playerAvatar.style.visibility="visible";
-    playerAvatar.style.transform=' translate3d(-100px,600px,35px)';
+    playerAvatar.style.transform=' translate3d(-100px,600px,30px)';
     globalPlacementY=0;
     globalPlacementX=0;
     blocks.forEach((block)=>{block.remove()});
@@ -340,6 +340,7 @@ let placementXmiddle;
 let placementY;
 let placementX;
 let isFirstPLaced=false;
+let jumphalFTime=50;
 //Function to update the position of the grapihical representation of the player
 function updatePlayerOnBoard(){
     soundJ.play();
@@ -361,13 +362,13 @@ function updatePlayerOnBoard(){
     globalPlacementY=placementY;
 
     if(isFirstPLaced===true){
-        playerAvatar.style.transition="transform 0.15s linear";
+        playerAvatar.style.transition=`transform 0.05s linear`;
         start= Date.now();
         window.requestAnimationFrame(moveFigureUp);
         setTimeout(function(){
         start= Date.now();
         window.requestAnimationFrame(moveFiguredown);
-        playerAvatar.style.visibility="visible";},150);
+        playerAvatar.style.visibility="visible";},jumphalFTime);
 
     }
 
@@ -389,19 +390,19 @@ function updatePlayerOnBoard(){
 function moveFigureUp(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
-    playerAvatar.style.transform=`translate3d(${Math.min(oldPlayerXtranslate+116/150 * elapsed, placementXmiddle)}px,${Math.min(oldPlayerYtranslate+116/150 * elapsed, placementYmiddle)}px,${Math.min(30+20/150 * elapsed, 50)}px)`;    
+    playerAvatar.style.transform=`translate3d(${Math.min(oldPlayerXtranslate+116/jumphalFTime * elapsed, placementXmiddle)}px,${Math.min(oldPlayerYtranslate+116/jumphalFTime * elapsed, placementYmiddle)}px,${Math.min(30+20/jumphalFTime * elapsed, 50)}px)`;    
 
    
-     if (elapsed<150){
+     if (elapsed<jumphalFTime){
         window.requestAnimationFrame(moveFigureUp);
     }
 }
 function moveFiguredown(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
-    playerAvatar.style.transform=`translate3d(${Math.min(placementXmiddle+ 116/150 * elapsed, placementX)}px,${Math.min(placementYmiddle+116/150 * elapsed, placementY)}px,${Math.max(50-20/150 * elapsed, 30)}px)`;
+    playerAvatar.style.transform=`translate3d(${Math.min(placementXmiddle+ 116/jumphalFTime * elapsed, placementX)}px,${Math.min(placementYmiddle+116/jumphalFTime * elapsed, placementY)}px,${Math.max(50-20/jumphalFTime * elapsed, 30)}px)`;
     
-    if (elapsed<150){
+    if (elapsed<jumphalFTime){
         window.requestAnimationFrame(moveFiguredown);
     }
 
