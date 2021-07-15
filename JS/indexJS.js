@@ -174,6 +174,7 @@ function showMessageWindow(){
 
 //This I need to hook up to a button
 function startCountDown(){
+    isFirstPLaced=false;
     click.play();
     playerAvatar.classList.remove('victorious');
     playerXtranslate=-100;
@@ -338,10 +339,11 @@ let placementYmiddle;
 let placementXmiddle;
 let placementY;
 let placementX;
-
+let isFirstPLaced=false;
 //Function to update the position of the grapihical representation of the player
 function updatePlayerOnBoard(){
     soundJ.play();
+    
     if (movesThisTurn===0){
     inTransition=true;
     placementY=player.y*116+33;
@@ -357,12 +359,28 @@ function updatePlayerOnBoard(){
 
     globalPlacementX=placementX;
     globalPlacementY=placementY;
-    playerAvatar.style.transition="transform 0.1s linear";
-    start= Date.now();
-    window.requestAnimationFrame(moveFigureUp);
-    setTimeout(function(){
+
+    if(isFirstPLaced===true){
+        playerAvatar.style.transition="transform 0.15s linear";
         start= Date.now();
-        window.requestAnimationFrame(moveFiguredown);},150);
+        window.requestAnimationFrame(moveFigureUp);
+        setTimeout(function(){
+        start= Date.now();
+        window.requestAnimationFrame(moveFiguredown);
+        playerAvatar.style.visibility="visible";},150);
+
+    }
+
+    else{
+        playerAvatar.style.transition="none";
+        playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;
+        isFirstPLaced=true;
+    }
+
+
+
+    
+
 }
     
 };
@@ -371,18 +389,18 @@ function updatePlayerOnBoard(){
 function moveFigureUp(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
+    playerAvatar.style.transform=`translate3d(${Math.min(oldPlayerXtranslate+116/150 * elapsed, placementXmiddle)}px,${Math.min(oldPlayerYtranslate+116/150 * elapsed, placementYmiddle)}px,${Math.min(30+20/150 * elapsed, 50)}px)`;    
 
-    playerAvatar.style.transform=`translate3d(${Math.min(oldPlayerXtranslate+116/150 * elapsed, placementXmiddle)}px,${Math.min(oldPlayerYtranslate+116/150 * elapsed, placementYmiddle)}px,${Math.min(30+20/150 * elapsed, 50)}px)`;
-    console.log(Date.now());
-    if (elapsed<150){
+   
+     if (elapsed<150){
         window.requestAnimationFrame(moveFigureUp);
     }
 }
 function moveFiguredown(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
-
     playerAvatar.style.transform=`translate3d(${Math.min(placementXmiddle+ 116/150 * elapsed, placementX)}px,${Math.min(placementYmiddle+116/150 * elapsed, placementY)}px,${Math.max(50-20/150 * elapsed, 30)}px)`;
+    
     if (elapsed<150){
         window.requestAnimationFrame(moveFiguredown);
     }
