@@ -596,7 +596,7 @@ function pressedBackButton(){
 //Level handling functions
 
 function levelUp(){
-
+    click.play();
     if(difficultyLevelChoosen<2){
         difficultyLevelChoosen++;
         difficulty.innerHTML=difficultyLevel[difficultyLevelChoosen][0];
@@ -606,7 +606,7 @@ function levelUp(){
 };
 
 function levelDown(){
-
+    click.play();
     if(difficultyLevelChoosen>0){
         difficultyLevelChoosen--;
         difficulty.innerHTML=difficultyLevel[difficultyLevelChoosen][0];
@@ -618,14 +618,17 @@ function levelDown(){
 //AudioControlFunctions
 
 function playMusic(){
+    click.play();
     background.play();
 }
 
 function pauseMusic(){
+    click.play();
     background.pause();
 }
     
 function volumeUpMusic(){
+    click.play();
     if (backgroundVolume<1){
         backgroundVolume+=0.05;
         background.volume=Number.parseFloat(backgroundVolume).toFixed(2);
@@ -633,6 +636,7 @@ function volumeUpMusic(){
     }
 }
 function volumeDownMusic(){
+    click.play();
     if (backgroundVolume>0){
         backgroundVolume-=0.05;
         background.volume=Number.parseFloat(backgroundVolume).toFixed(2);
