@@ -44,6 +44,7 @@ let stepInPath=0;
 let inTransition = false;
 let globalPlacementY=0;
 let globalPlacementX=0;
+let deathCounter=0;
 const displayArea=document.getElementById('display');
 const blockTemplate2=document.getElementById('newBlock');
 const indicatorBlock= document.getElementById('indicator');
@@ -59,6 +60,7 @@ const level=document.getElementById('level');
 const deaths=document.getElementById('deaths');
 const time=document.getElementById('time');
 
+//difficulties
 const diffUpButton= document.getElementById('difficultyUp');
 const diffDownButton= document.getElementById('difficultyDown');
 const difficulty= document.getElementById('difficulty');
@@ -69,7 +71,10 @@ let difficultyLevel=[  ["Easy", 2000],
 
 let difficultyLevelChoosen =0;
 
-let deathCounter=0;
+//Difficulty events/handlers
+diffUpButton.onclick=levelUp;
+diffDownButton.onclick=levelDown;
+
 
 //sounds
 let soundJ=new Audio('sounds/jump1.mp3');
@@ -90,8 +95,24 @@ countDown.volume=0.2;
 let goSound=new Audio('sounds/go.wav');
 goSound.volume=0.2;
 
-let background=document.getElementById('backgroundMusic');
-background.volume=0.1;
+let background=new Audio('sounds/Skjalg-A-Skagen-Decades.mp3');
+//document.getElementById('backgroundMusic');
+let backgroundVolume=0.1;
+background.volume=backgroundVolume;
+
+//Audio controls
+
+const playButton = document.getElementById('playButton');
+const pauseButton = document.getElementById('pauseButton');
+const volumeUpButton = document.getElementById('volumeUp');
+const volumeDownButton = document.getElementById('volumeDown');
+const volumeDisplay= document.getElementById('volumeScreen');
+
+//Audio control events/eventhandlers
+playButton.onclick=playMusic;
+pauseButton.onclick=pauseMusic;
+volumeUpButton.onclick=volumeUpMusic;
+volumeDownButton.onclick=volumeDownMusic;
 
 
 
@@ -132,8 +153,6 @@ window.addEventListener("victory", function(event){
     playerAvatar.classList.add('victorious');
 });
 
-diffUpButton.onclick=levelUp;
-diffDownButton.onclick=levelDown;
 
 
 
@@ -595,3 +614,29 @@ function levelDown(){
     }
 
 };
+
+//AudioControlFunctions
+
+function playMusic(){
+    background.play();
+}
+
+function pauseMusic(){
+    background.pause();
+}
+    
+function volumeUpMusic(){
+    if (backgroundVolume<1){
+        backgroundVolume+=0.05;
+        background.volume=Number.parseFloat(backgroundVolume).toFixed(2);
+        volumeDisplay.innerHTML=Number.parseFloat(backgroundVolume).toFixed(2);
+    }
+}
+function volumeDownMusic(){
+    if (backgroundVolume>0){
+        backgroundVolume-=0.05;
+        background.volume=Number.parseFloat(backgroundVolume).toFixed(2);
+        volumeDisplay.innerHTML=Number.parseFloat(backgroundVolume).toFixed(2);
+    }
+
+}

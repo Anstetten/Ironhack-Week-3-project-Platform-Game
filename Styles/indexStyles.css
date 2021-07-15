@@ -96,9 +96,50 @@ audio{
   left:1%;
   width:auto;
   height: auto;
+  z-index: 9000;
   visibility: visible;
   text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText);
   letter-spacing: 3px;
+}
+
+#audioWrapper{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border:none;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #fff, 0 0 5px var(--colorCounterText);
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText), 0 0 40px var(--colorCounterText);
+}
+#audioWrapper button{
+  margin:3px 0;
+  justify-content: space-evenly;
+  box-shadow: 0 0 5px #fff,0 0 5px var(--colorCounterText);
+  border:none;
+  
+}
+
+#audioWrapper button:hover{
+  box-shadow: 0 0 10px #fff, 0 0 30px var(--colorCounterText);
+}
+
+#pauseSymbol{
+  height:1rem;
+  width: 1rem;
+  background: linear-gradient(to right,white 33%,black 33%,black 66%,white 66%);
+  margin:2px;
+ 
+  
+}
+
+#playSymbol{
+  width: 0; 
+  height: 0; 
+  border-top: 0.5rem solid transparent;
+  border-bottom: 0.5rem solid transparent;
+  border-left: 0.7rem solid white;
+  margin:2px;
+
 }
 
 

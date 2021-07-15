@@ -10,15 +10,7 @@
 <body>
 
     <div id="wrapper">
-        <audio
-        controls
-        autoplay
-        id="backgroundMusic"
-        volume="0.1"
-        src="./sounds/Skjalg-A-Skagen-Decades.mp3">
-            Your browser does not support the
-            <code>audio</code> element.
-        </audio>
+
 
         <div id="scoreboard" class="window">
             <p>
@@ -26,9 +18,20 @@
                 Deaths: <span id="deaths">0</span><br>
                 Time per turn: <span id="time"></span> s<br>
             </p>
-            
-         
-            
+
+            <div id="audioWrapper">
+                <button id="playButton">
+                    <div id="playSymbol"> </div>
+                </button>
+                <button id="pauseButton">
+                    <div id="pauseSymbol"> </div>
+                </button>
+                <button id="volumeDown">-</button>
+                <span id="volumeScreen">0.10</span>
+                <button id="volumeUp">+</button>
+
+            </div>
+
         </div>
     
         <div id="control" class="window">
