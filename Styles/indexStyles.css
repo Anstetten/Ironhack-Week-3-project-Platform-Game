@@ -3,7 +3,9 @@
     src: url('../BACKTO1982.TTF')
   }
 :root{
-    
+
+/*Variable used for the sizing of the different blocks and tiles*/
+/*Not responsive at all*/
   --block-size:100px;
   --cube_size:calc(var(--block-size)/2);
   --sides:100px;
@@ -12,25 +14,27 @@
   --sidesPlatform:1200px;
   --heightPlatform:1800px;
   --offsetPlatform: -300px;
-
   --sidesIndicator:50px;
   --heightIndicator:100px;
   --offsetIndicator: -25px;
 
+/*Colors udes for the indicator block*/
   --colorGreenVibrant:#09ff00;
   --colorGreenDull:#0c9e06;
 
+/*Colors for the tile blocks*/
   --colorPurpleVibrant:#ff00f2;
   --colorPurpleDull:#f0cfee;
 
+  /*Colors for the red platform*/
   --colorRedVibrant:#ff0000;
   --colorRedDull:#c72222;
 
+  /*Colors for the blue platform*/
   --colorBlueVibrant:#00e1ff;
   --colorBlueDull:#00adc4;
 
-  /*Counter TExt oclor*/
-
+  /*Color for the counter text */
   --colorCounterText:#eeff00;
 
   }
@@ -71,13 +75,6 @@
   z-index: 200;
 }
 
-
-audio{
-  position:absolute;
-  top:100px;
-  left:1%;
-  z-index: 800;
-}
 
 #control{
   
@@ -123,13 +120,13 @@ audio{
   box-shadow: 0 0 10px #fff, 0 0 30px var(--colorCounterText);
 }
 
+/*Audio contorl buttons*/
 #pauseSymbol{
   height:1rem;
   width: 1rem;
   background: linear-gradient(to right,white 33%,black 33%,black 66%,white 66%);
   margin:2px;
- 
-  
+
 }
 
 #playSymbol{
@@ -142,7 +139,7 @@ audio{
 
 }
 
-
+/*Buttons in general*/
 button{
   width: fit-content;
   margin-left: auto;
@@ -157,6 +154,7 @@ button{
   transition: box-shadow 0.1s ease-in-out;
 }
 
+/*Controls for the difficulty chooser*/
 #difficultyChooser{
   display: flex;
   flex-direction: column;
@@ -186,7 +184,7 @@ ul{
 li{
   margin: 3px 0;
 }
-
+/*You lost window*/
 #gameOver{
   
   font-size: 2rem;
@@ -195,6 +193,8 @@ li{
   visibility: hidden;
   
 }
+
+/*You won window*/
 #gameWon{
   font-size: 1.5rem;
   width:fit-content;
@@ -202,6 +202,7 @@ li{
   visibility: hidden;
 }
 
+/*The window for the counter*/
 #counter{
   color:white;
   font-size: 2rem;
@@ -227,8 +228,6 @@ body{
   justify-content: center;
   align-items: center;
   align-content: center;
-  
-
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
@@ -437,11 +436,6 @@ body{
   50% {background-color:var(--colorPurpleDull);}
   100% {}
 }
-
-.block.fallen{
-
-}
-
 
 .block.shaken{
     animation: shake 0.3s infinite alternate-reverse;

@@ -1,6 +1,6 @@
+//Import player object from the other JS file
 import Player from './player.js';
 
-//FrameRequest version
 
 // For representation sake the board:
 
@@ -17,7 +17,7 @@ import Player from './player.js';
 // | 90 91 92 93 94 95 96 97 98 99 
 // |
 
-
+//These are the levels. Each inner array is a level/safe path through the board
 const safePaths=[
     [30,31,32,33,34,35,36,37,38,39],
     [60,61,62,63,53,43,33,23,24,25,26,27,28,29],
@@ -47,6 +47,9 @@ let inTransition = false;
 let globalPlacementY=0;
 let globalPlacementX=0;
 let deathCounter=0;
+let areYouReady=false;
+
+//All the elements from the DOM
 const displayArea=document.getElementById('display');
 const blockTemplate2=document.getElementById('newBlock');
 const indicatorBlock= document.getElementById('indicator');
@@ -63,15 +66,13 @@ const deaths=document.getElementById('deaths');
 const time=document.getElementById('time');
 
 
-//difficulties
+// Elements concerning the difficulty choises
 const diffUpButton= document.getElementById('difficultyUp');
 const diffDownButton= document.getElementById('difficultyDown');
 const difficulty= document.getElementById('difficulty');
 let difficultyLevel=[  ["Easy", 2000],
                        ["Medium", 1500],
                         ["Hard", 1000]];
-
-
 let difficultyLevelChoosen =0;
 
 //Difficulty events/handlers
@@ -99,12 +100,10 @@ let goSound=new Audio('sounds/go.wav');
 goSound.volume=0.2;
 
 let background=new Audio('sounds/Skjalg-A-Skagen-Decades.mp3');
-//document.getElementById('backgroundMusic');
 let backgroundVolume=0.1;
 background.volume=backgroundVolume;
 
-//Audio controls
-
+//Audio control elements
 const playButton = document.getElementById('playButton');
 const pauseButton = document.getElementById('pauseButton');
 const volumeUpButton = document.getElementById('volumeUp');
@@ -117,16 +116,22 @@ pauseButton.onclick=pauseMusic;
 volumeUpButton.onclick=volumeUpMusic;
 volumeDownButton.onclick=volumeDownMusic;
 
-
-
-//these help the jump animation
+//Jump animation aux variables
+// This is for the placement of the avatar at the beginning of the game
 let playerXtranslate=-100;
 let playerYtranslate=600;
-let areYouReady=false;
+let start;
+let oldPlayerYtranslate;
+let oldPlayerXtranslate;
+let placementYmiddle;
+let placementXmiddle;
+let placementY;
+let placementX;
+let isFirstPLaced=false;
+let jumphalFTime=50;
 
 
-
-//Events and eventhandlers
+//Events and eventhandlers for the arrow buttons
 window.addEventListener("keydown", function (event){
     switch (event.key){
         case "ArrowUp":
@@ -145,6 +150,7 @@ window.addEventListener("keydown", function (event){
 });
 window.onload=showMessageWindow;
 
+//Events and eventhandlers for the  ready/restart/go-on to the next level buttons
 readyButton.onclick=function(){
     background.play();
     startCountDown();
@@ -157,13 +163,11 @@ window.addEventListener("victory", function(event){
 });
 
 
-
-
-
-//For setting up the visual board
+//For setting up the visual board we run this function fors
 GenerateTable();
 
 
+//Functions
 
 //Show Message window
 function showMessageWindow(){
@@ -171,8 +175,7 @@ function showMessageWindow(){
 
 }
 
-
-//This I need to hook up to a button
+//Function to start the countdown
 function startCountDown(){
     isFirstPLaced=false;
     click.play();
@@ -189,19 +192,18 @@ function startCountDown(){
     counterWindow.style.visibility='visible';
     counterText.innerHTML=counter;
     countDown.play();
+    //Launch actual countdown and control what it shows
     let counterTimer= setInterval(() => {
         counter--;
         if(counterText.innerHTML==="Go!"){
             clearInterval(counterTimer);
             counterWindow.style.visibility="hidden";
-            startNewRound(timePerRound);
-            
+            startNewRound(timePerRound);       
         }
         
         else if(counter===0){
             counterText.innerHTML="Go!"
-            goSound.play();
-            
+            goSound.play();      
         }
 
         else{
@@ -217,38 +219,35 @@ function startCountDown(){
 
 }
 
-//function to generate table with coordinates as classes
+//function to generate board with coordinates as classes
 function GenerateTable (){
     let blocks = document.querySelectorAll('.block:not(.green)');
+
+    //Set up the avatar to startinf position
     playerAvatar.classList.remove("fallen");
     playerAvatar.style.visibility="visible";
     playerAvatar.style.transform=' translate3d(-100px,600px,30px)';
     globalPlacementY=0;
     globalPlacementX=0;
+    //Remove all blocks from previous round
     blocks.forEach((block)=>{block.remove()});
+    //Create new block, give them their coordinates as classes and append them to the correct HTML element
     let numberOfBlocksToCreate=100
     for (let i=0; i<numberOfBlocksToCreate; i++)
         {
             let cloneBlock = blockTemplate2.content.cloneNode(true);
- 
             let colorBlock = cloneBlock.querySelector('.block')
-            //this to be deleted later
-            colorBlock.onclick= function (event){
-            event.target.parentElement.classList.add("selected");
-            
-            }
-
             //add coordinates
             let coordinate= (i>9) ? ''+i : "0"+i;
             colorBlock.id=coordinate;
-
-    
             displayArea.appendChild(cloneBlock);}
             
-
+    //This is eyeCandy. It can be turned on
     //setMovingAndGlowing();
     }
     
+ //This is an eyecandy function that move the tiles up and down and makes them change color
+ //This is resource needy and makes it lag for weaker computers   
 function setMovingAndGlowing(){
     let blocks = document.querySelectorAll('.block:not(.green):not(.fallen)');
     setInterval(function(){
@@ -268,6 +267,7 @@ function setMovingAndGlowing(){
 
 }
 
+//Function to start new round
 function startNewRound(timePerRound){
 
     let timePerThisTurn=timePerRound;
@@ -281,11 +281,13 @@ function startNewRound(timePerRound){
     shakeTiles(safePaths[safePathindex][stepInPath],stepInPath);
     refreshTimeIndicator(timePerThisTurn);
 
+    //Start the setInterval that controuls the turns in the round
     let timerThisTurn =setInterval(() => {
         
         movesThisTurn=0;
         fallFakeTiles(safePaths[safePathindex][stepInPath],safePaths[safePathindex][stepInPath+1]);
         stepInPath++;
+        //if we get to the end of the path we win
         if(stepInPath===safePaths[safePathindex].length){
             clearInterval(timerThisTurn);
             setTimeout(()=>{
@@ -295,19 +297,19 @@ function startNewRound(timePerRound){
                             },800)
         }
 
+        //If we are still not the end of the path
         else{
-
         checkIfPlayerIsAlive(safePaths[safePathindex][stepInPath],timerThisTurn);
         refreshTimeIndicator(timePerThisTurn);
-        
         shakeTiles(safePaths[safePathindex][stepInPath],stepInPath);
-
         }
         
 
     }, timePerThisTurn);
 };
 
+//Function to run if wed wond the round
+//Reinitializes the player object and the avatar
 function onToNextLevel(){
     click.play();
     playerAvatar.style.visibility="hidden";
@@ -322,29 +324,16 @@ function onToNextLevel(){
     deathCounter=0;
     deaths.innerHTML=deathCounter;
     
-    
+   //Starts new countdown and round 
     startCountDown();
 }
 
 
-
-
-//Fnctions
-
-//This is the count down that occurs at the beginning of each round
-let start;
-let oldPlayerYtranslate;
-let oldPlayerXtranslate;
-let placementYmiddle;
-let placementXmiddle;
-let placementY;
-let placementX;
-let isFirstPLaced=false;
-let jumphalFTime=50;
-//Function to update the position of the grapihical representation of the player
+//Function to update the position of the graphical representation (avatar) of the player
 function updatePlayerOnBoard(){
     soundJ.play();
     
+    //If we can still move thsi turn
     if (movesThisTurn===0){
     inTransition=true;
     placementY=player.y*116+33;
@@ -360,33 +349,29 @@ function updatePlayerOnBoard(){
 
     globalPlacementX=placementX;
     globalPlacementY=placementY;
+        //If this is our first stop after the initialization of the avatar in the board
+        //Implementation of the requestAnimationFrame so that the jumpinf animation is smooth
+        if(isFirstPLaced===true){
+           playerAvatar.style.transition=`transform 0.05s linear`;
+           start= Date.now();
+           window.requestAnimationFrame(moveFigureUp);
+           setTimeout(function(){
+           start= Date.now();
+          window.requestAnimationFrame(moveFiguredown);
+          playerAvatar.style.visibility="visible";},jumphalFTime);
 
-    if(isFirstPLaced===true){
-        playerAvatar.style.transition=`transform 0.05s linear`;
-        start= Date.now();
-        window.requestAnimationFrame(moveFigureUp);
-        setTimeout(function(){
-        start= Date.now();
-        window.requestAnimationFrame(moveFiguredown);
-        playerAvatar.style.visibility="visible";},jumphalFTime);
-
-    }
-
-    else{
-        playerAvatar.style.transition="none";
-        playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;
-        isFirstPLaced=true;
-    }
-
-
-
-    
-
-}
+        }
+        //If this it the initialization of the avatar on the board
+        else{
+           playerAvatar.style.transition="none";
+            playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;
+           isFirstPLaced=true;
+        }
+    }   
     
 };
 
-
+//Function to move the avatar upward at the beginning of the jump
 function moveFigureUp(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
@@ -397,6 +382,8 @@ function moveFigureUp(){
         window.requestAnimationFrame(moveFigureUp);
     }
 }
+
+//Function to move the avatar downward at the end of the jump
 function moveFiguredown(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
@@ -408,9 +395,11 @@ function moveFiguredown(){
 
 }
 
+
 //This is the function to shake the tiles aorund the player except the next safe one
 function shakeTiles(currentSafeTile,stepInPath){
     
+    //Select all the tiles
     let allBlocks=document.querySelectorAll('.block:not(.green)');
     allBlocks.forEach((block)=>{
         
@@ -421,9 +410,10 @@ function shakeTiles(currentSafeTile,stepInPath){
         
     })
     let nextSafeTile=(safePaths[safePathindex][stepInPath+1]);
-   
+    //Get the list of the adjacent tiles
     let listOfAdjacentTiles=getAllAdjacentTile(currentSafeTile,nextSafeTile);
     
+    //Shake the tiles
     listOfAdjacentTiles.forEach((tile) => {
         let tileBlock = document.getElementById(`${tile}`);
         if (!tileBlock.classList.contains("fallen")) {
@@ -436,7 +426,7 @@ function shakeTiles(currentSafeTile,stepInPath){
 
 };
 
-//Restart the time indicator that shows how much time we have before the end of the turn
+//Function to restart the time indicator that shows how much time we have before the end of the turn
 function refreshTimeIndicator(timerTime){
         let sheet = document.styleSheets[0];
         let rules = sheet.cssRules;
@@ -446,17 +436,21 @@ function refreshTimeIndicator(timerTime){
             if (rules[i].selectorText===".blockIndicatorShrinking") {transitionRule=rules[i]};
 
         }
+        //Adjust the transition time according thet time available per turn
         transitionRule.style.transition=`transform ${timerTime/1000}s linear`;
 
 
         indicatorBlock.classList.add("blockIndicatorShrinking");
         indicatorBlock.classList.add("shrunk");
+        //Stop the transition a little bit earlier than the theoretical time. (Set Timeout would be executed later in reality )
         setTimeout(function(){
             indicatorBlock.classList.remove("blockIndicatorShrinking");
             indicatorBlock.classList.remove("shrunk");
         },timerTime*0.92);
 }
 
+
+//Get the list of the tiles adjacent to the current tile
 function getAllAdjacentTile(tileCoordinate,nextSafeTile){
     let tileCoordinateInt=0;
     let nextSafeTileInt=0;
@@ -514,7 +508,7 @@ function getAllAdjacentTile(tileCoordinate,nextSafeTile){
     return finalTileList;
 }
 
-//This function falls the fake tiles 
+//Function to fall the fake tiles 
 function fallFakeTiles(lastSafeTile,nextSafeTile){
     //We have to fall the last safe tile plus the direct adjacent tiles
 
@@ -536,11 +530,8 @@ function fallFakeTiles(lastSafeTile,nextSafeTile){
     let currentY=Math.floor(lastSafeTileInt/10);
     let currentX=lastSafeTileInt%10;
 
-    //console.log(`lastsafeTile: ${lastSafeTile} lastSafeTileInt: ${lastSafeTileInt} y: ${currentY} x: ${currentX}`);
-
-
     let tilesToFall =[];
-
+    // Get the adjacent tiles that are to be fallen
     let middleLeft= (currentX >0) ? (currentY)*10+(currentX-1) : null;
     if (middleLeft!==null  && middleLeft!==nextSafeTileInt && !safePaths[safePathindex].includes(middleLeft)) tilesToFall.push(middleLeft);
 
@@ -569,6 +560,7 @@ function fallFakeTiles(lastSafeTile,nextSafeTile){
         tileBlock.classList.add("fallen");
         tileBlock.style.transition="none";
         ;
+        //The actual falling of the fkae tiles
         setTimeout(()=>{    
             tileBlock.style.transition="transform 2s ease-in-out";        
             tileBlock.style.transform=`translate3d(0px,0px,-1200px) rotateZ(0deg) rotateY(-120deg) rotateX(-120deg)`;},50)
@@ -618,7 +610,7 @@ function gameOver(timer){
 }
 
 
-//Arrow key eccent handlers
+//Function to handle the UP Arrow key pushes
 function pressedForwardButton(){
     if (movesThisTurn<1 && areYouReady!==false){
         player.moveForward();
@@ -627,6 +619,8 @@ function pressedForwardButton(){
     }
     
 }
+
+//Function to handle the Left Arrow key pushes
 function pressedLeftdButton(){
     if (movesThisTurn<1 && areYouReady!==false){
         player.moveLeft();
@@ -634,6 +628,8 @@ function pressedLeftdButton(){
         movesThisTurn=1;
     }
 }
+
+//Function to handle the Right Arrow key pushes
 function pressedRightdButton(){
     if (movesThisTurn<1 && areYouReady!==false){
     player.moveRight();
@@ -641,6 +637,8 @@ function pressedRightdButton(){
     movesThisTurn=1;
 }
 }
+
+//Function to handle the Down Arrow key pushes
 function pressedBackButton(){
     if (movesThisTurn<1 && areYouReady!==false)
     {
@@ -650,8 +648,9 @@ function pressedBackButton(){
     }
 }
 
-//Level handling functions
 
+// Difficulty evel handling functions
+//Function to increase the difficulty
 function levelUp(){
     click.play();
     if(difficultyLevelChoosen<2){
@@ -662,6 +661,7 @@ function levelUp(){
 
 };
 
+//Function to decrease the difficulty
 function levelDown(){
     click.play();
     if(difficultyLevelChoosen>0){
@@ -672,18 +672,20 @@ function levelDown(){
 
 };
 
-//AudioControlFunctions
-
+//Functions to control music
+//Function to play/resume music
 function playMusic(){
     click.play();
     background.play();
 }
 
+//Function to pausemusic
 function pauseMusic(){
     click.play();
     background.pause();
 }
     
+//Function to increase music volume
 function volumeUpMusic(){
     click.play();
     if (backgroundVolume<1){
@@ -692,6 +694,8 @@ function volumeUpMusic(){
         volumeDisplay.innerHTML=Number.parseFloat(backgroundVolume).toFixed(2);
     }
 }
+
+//Function to decrease music volume
 function volumeDownMusic(){
     click.play();
     if (backgroundVolume>0){

@@ -1,4 +1,4 @@
-// This class is representing the little figurine on the board.
+// This class is representing the little figure on the board.
 //This is the player.
 //This object knows nothing about the objects found in the main JS file.
 //I seperated it entirely from it
@@ -7,11 +7,10 @@ class Player{
     constructor(name){
         this.name = name;
     }
-
-    
+    //Its coordinates
     x=0;
     y=0;
-    isAlive=true;
+
     
     //Moving towards X direction
     moveForward(){
@@ -42,6 +41,8 @@ class Player{
         this.x=posX;
     }
 
+    //Get the tile on which the plaze is standing.
+    //Returned variable is in string
     getTile(){
         let playerTile="";
         playerTile=""+this.y+this.x;
