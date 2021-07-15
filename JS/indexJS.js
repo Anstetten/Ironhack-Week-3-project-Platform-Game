@@ -406,7 +406,7 @@ function moveFiguredown(){
     }
 
 }
-
+//
 //This is the function to shake the tiles aorund the player except the next safe one
 function shakeTiles(currentSafeTile,stepInPath){
     
