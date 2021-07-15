@@ -62,6 +62,7 @@ const level=document.getElementById('level');
 const deaths=document.getElementById('deaths');
 const time=document.getElementById('time');
 
+
 //difficulties
 const diffUpButton= document.getElementById('difficultyUp');
 const diffDownButton= document.getElementById('difficultyDown');
@@ -330,28 +331,63 @@ function onToNextLevel(){
 //Fnctions
 
 //This is the count down that occurs at the beginning of each round
+let start;
+let oldPlayerYtranslate;
+let oldPlayerXtranslate;
+let placementYmiddle;
+let placementXmiddle;
+let placementY;
+let placementX;
 
 //Function to update the position of the grapihical representation of the player
 function updatePlayerOnBoard(){
     soundJ.play();
     if (movesThisTurn===0){
     inTransition=true;
-    let placementY=player.y*116+33;
-    
-    let placementYmiddle= (placementY-playerYtranslate)/2+playerYtranslate;
+    placementY=player.y*116+33;
+    placementYmiddle= (placementY-playerYtranslate)/2+playerYtranslate;
+
+    oldPlayerYtranslate=playerYtranslate;
     playerYtranslate=placementY;
     
-    let placementX=player.x*116+33;
-    let placementXmiddle= (placementX-playerXtranslate)/2+playerXtranslate;
+    placementX=player.x*116+33;
+    placementXmiddle= (placementX-playerXtranslate)/2+playerXtranslate;
+    oldPlayerXtranslate=playerXtranslate;
     playerXtranslate=placementX;
+
     globalPlacementX=placementX;
     globalPlacementY=placementY;
-    
-    playerAvatar.style.transform=`translate3d(${placementXmiddle}px,${placementYmiddle}px,50px)`;
-    setTimeout(function(){playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;},150);
+    playerAvatar.style.transition="transform 0.1s linear";
+    start= Date.now();
+    window.requestAnimationFrame(moveFigureUp);
+    setTimeout(function(){
+        start= Date.now();
+        window.requestAnimationFrame(moveFiguredown);},150);
 }
     
 };
+
+
+function moveFigureUp(){
+    let timestamp= Date.now();
+    const elapsed = timestamp-start;
+
+    playerAvatar.style.transform=`translate3d(${Math.min(oldPlayerXtranslate+116/150 * elapsed, placementXmiddle)}px,${Math.min(oldPlayerYtranslate+116/150 * elapsed, placementYmiddle)}px,${Math.min(30+20/150 * elapsed, 50)}px)`;
+    console.log(Date.now());
+    if (elapsed<150){
+        window.requestAnimationFrame(moveFigureUp);
+    }
+}
+function moveFiguredown(){
+    let timestamp= Date.now();
+    const elapsed = timestamp-start;
+
+    playerAvatar.style.transform=`translate3d(${Math.min(placementXmiddle+ 116/150 * elapsed, placementX)}px,${Math.min(placementYmiddle+116/150 * elapsed, placementY)}px,${Math.max(50-20/150 * elapsed, 30)}px)`;
+    if (elapsed<150){
+        window.requestAnimationFrame(moveFiguredown);
+    }
+
+}
 
 //This is the function to shake the tiles aorund the player except the next safe one
 function shakeTiles(currentSafeTile,stepInPath){
