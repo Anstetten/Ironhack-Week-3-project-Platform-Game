@@ -116,6 +116,21 @@ button{
   transition: box-shadow 0.1s ease-in-out;
 }
 
+#difficultyChooser{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-content: center;
+  align-items: center;
+}
+
+#difficultyUp,#difficultyDown{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+
+
 button:hover{
   
   box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText), 0 0 40px var(--colorCounterText), 0 0 50px var(--colorCounterText);

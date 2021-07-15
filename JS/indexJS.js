@@ -58,6 +58,17 @@ const timeInfo=document.getElementById('timeInfo');
 const level=document.getElementById('level');
 const deaths=document.getElementById('deaths');
 const time=document.getElementById('time');
+
+const diffUpButton= document.getElementById('difficultyUp');
+const diffDownButton= document.getElementById('difficultyDown');
+const difficulty= document.getElementById('difficulty');
+let difficultyLevel=[  ["Easy", 2000],
+                       ["Medium", 1500],
+                        ["Hard", 1000]];
+
+
+let difficultyLevelChoosen =0;
+
 let deathCounter=0;
 
 //sounds
@@ -109,15 +120,20 @@ window.addEventListener("keydown", function (event){
         }
 });
 window.onload=showMessageWindow;
+
 readyButton.onclick=function(){
     background.play();
     startCountDown();
 }
+
 restartButton.onclick=startCountDown;
 gameWonWindow.onclick=onToNextLevel;
 window.addEventListener("victory", function(event){
     playerAvatar.classList.add('victorious');
 });
+
+diffUpButton.onclick=levelUp;
+diffDownButton.onclick=levelDown;
 
 
 
@@ -557,3 +573,25 @@ function pressedBackButton(){
     movesThisTurn=1;
     }
 }
+
+//Level handling functions
+
+function levelUp(){
+
+    if(difficultyLevelChoosen<2){
+        difficultyLevelChoosen++;
+        difficulty.innerHTML=difficultyLevel[difficultyLevelChoosen][0];
+        timePerRound=difficultyLevel[difficultyLevelChoosen][1];
+    }
+
+};
+
+function levelDown(){
+
+    if(difficultyLevelChoosen>0){
+        difficultyLevelChoosen--;
+        difficulty.innerHTML=difficultyLevel[difficultyLevelChoosen][0];
+        timePerRound=difficultyLevel[difficultyLevelChoosen][1];
+    }
+
+};
