@@ -16,8 +16,8 @@
   --sidesPlatform:100vh;
   --heightPlatform:180vh;
   --offsetPlatform: calc((var(--sidesPlatform) - var(--heightPlatform) ) / 2 );
-  --sidesIndicator:50px;
-  --heightIndicator:100px;
+  --sidesIndicator:4vh;
+  --heightIndicator:9vh;
   --offsetIndicator: calc((var(--sidesIndicator) - var(--heightIndicator) ) / 2 );
 
 /*Colors udes for the indicator block*/
@@ -52,7 +52,7 @@
   color:white;
   text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--colorCounterText), 0 0 40px var(--colorCounterText);
   font-weight: bolder;
-  background-color: rgba(0, 0, 0, 0.363);
+  background-color: rgba(0, 0, 0, 0.616);
   margin:auto;
   z-index: 500;
   display: flex;
@@ -91,7 +91,8 @@
 }
 
 #scoreboard{
-  font-size: 0.8rem;
+  font-size: 1.3vh;
+  min-width: 20vh;
   font-weight: 100;
   text-align: left;
   top:1%;
@@ -168,7 +169,18 @@ button{
   align-items: center;
 }
 
+#difficultyChooser span{
+ font-size: 1.8vh;
+}
+#difficultyChooser button{
+  font-size: 1.8vh;
+ height: 3.9vh;
+ min-width: 1.7vw;
+}
+
+
 #difficultyUp,#difficultyDown{
+  height: 3.5vh;
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -181,8 +193,16 @@ button:hover{
       
 }
 
+#control h1{
+  font-size: 3vh;
+}
+
+#control p{
+  font-size: 1.7vh;
+}
+
 ul{
-  font-size: 0.9rem;
+  font-size: 1.6vh;
   text-align: left;
 }
 
@@ -536,8 +556,8 @@ body{
 /*Green rotating block*/
 .block.green{
   position: absolute;
-  top: -250px;
-  left:500px;
+  top: -25vh;
+  left:40vh;
   animation: rotate 15s infinite linear;
 }
   
@@ -562,26 +582,26 @@ body{
   width:var(--sidesIndicator);
   height:var(--heightIndicator);
   position: absolute;
-  top:25px;
-  left:25px;
+  top:2vh;
+  left:2vh;
   transform-style: preserve-3d;
   transition: transform 0s linear;
-  transform: translateZ(60px) scaleZ(1)
+  transform: translateZ(5vh) scaleZ(1)
 }
 .blockIndicatorShrinking{
   
   width:var(--sidesIndicator);
   height:var(--heightIndicator);
   position: absolute;
-  top:25px;
-  left:25px;
+  top:2vh;
+  left:2vh;
   transform-style: preserve-3d;
   transition: transform 1s linear;
-  transform: translateZ(60px) scaleZ(1)
+  transform: translateZ(5vh) scaleZ(1)
 } 
 
 .blockIndicator.shrunk{
-    transform: translateZ(60px) scaleZ(0);
+    transform: translateZ(5vh) scaleZ(0);
 }
 
 #frontIndicator{
