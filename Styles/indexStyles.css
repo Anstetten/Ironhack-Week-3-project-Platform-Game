@@ -6,13 +6,15 @@
 
 /*Variable used for the sizing of the different blocks and tiles*/
 /*Not responsive at all*/
-  --block-size:100px;
-  --cube_size:calc(var(--block-size)/2);
-  --sides:100px;
-  --height:10px;
-  --offset: calc((var(--sides) - var(--height) ) / 2 );
-  --sidesPlatform:1200px;
-  --heightPlatform:1800px;
+--sides:8vh;
+--height:1vh;
+--offset: calc((var(--sides) - var(--height) ) / 2 );
+--cube_size:4vh;
+  --displayWidth:100vh;
+  --displayHeight:100vh;
+  --blockMargin:0.5vh;
+  --sidesPlatform:100vh;
+  --heightPlatform:180vh;
   --offsetPlatform: calc((var(--sidesPlatform) - var(--heightPlatform) ) / 2 );
   --sidesIndicator:50px;
   --heightIndicator:100px;
@@ -40,6 +42,7 @@
   }
   
 *{
+
   box-sizing: border-box;
   font-family: 'Eighties';
   }
@@ -80,6 +83,8 @@
   
   /* width:1000px;
   height: 500px; */
+
+
   height: fit-content;
   width: 50%;
   visibility: hidden;
@@ -233,6 +238,7 @@ body{
   width: 100vw;
 }
 #view{
+  height: 100vh;
   position: relative;
   z-index: 5;
   display: flex;
@@ -244,8 +250,8 @@ body{
     display: grid;
     position: relative;
     gap: 0px;
-    width: 1160px;
-    height: 1160px;
+    width: var(--displayWidth);
+    height: var(--displayHeight);
     grid-template-columns: repeat(10,1fr);
     z-index: 6;
 }
@@ -258,6 +264,7 @@ body{
     transform: rotateZ(-55deg) rotateX(40deg) rotateY(45deg) scale(0.8);
     display: flex;
     justify-content: flex-start;
+    align-items: center;
 }
   
   /*//////////////////////////////////////////////////////////*/
@@ -268,8 +275,6 @@ body{
     position: absolute;
     z-index: 8;
     transform-style: preserve-3d;
-    transform: translate3d(-100px,600px,35px);
-
 }
 
 #figure.fallen{
@@ -322,7 +327,7 @@ body{
 /*Blocks representing the tiles*/
   
 .block{
-  margin:8px;
+  margin:var(--blockMargin);
   width:var(--sides);
   height:var(--sides);
   position: relative;
@@ -462,7 +467,6 @@ body{
   width:var(--sidesPlatform);
   height:var(--sidesPlatform);
   position: relative;
-  top:-20px;
   transform-style: preserve-3d;
   transform:translateZ(calc(var(--heightPlatform)/-2));
   

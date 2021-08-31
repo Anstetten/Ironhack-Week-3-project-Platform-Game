@@ -118,8 +118,11 @@ volumeDownButton.onclick=volumeDownMusic;
 
 //Jump animation aux variables
 // This is for the placement of the avatar at the beginning of the game
-let playerXtranslate=-100;
-let playerYtranslate=600;
+let playerXtranslate=-6;
+//44.5-widht/2
+let playerYtranslate=52.5;
+let oneJumpDistance = 10;
+let visualCorrection = 2.5;
 let start;
 let oldPlayerYtranslate;
 let oldPlayerXtranslate;
@@ -180,8 +183,8 @@ function startCountDown(){
     isFirstPLaced=false;
     click.play();
     playerAvatar.classList.remove('victorious');
-    playerXtranslate=-100;
-    playerYtranslate=600;
+    playerXtranslate=-6;
+    playerYtranslate=52.5;
     time.innerHTML=timePerRound/1000;
     level.innerHTML=safePathindex+1;
     GenerateTable();
@@ -226,7 +229,7 @@ function GenerateTable (){
     //Set up the avatar to startinf position
     playerAvatar.classList.remove("fallen");
     playerAvatar.style.visibility="visible";
-    playerAvatar.style.transform=' translate3d(-100px,600px,30px)';
+    playerAvatar.style.transform=`translate3d(${playerXtranslate}vh,${playerYtranslate}vh,30px)`;
     globalPlacementY=0;
     globalPlacementX=0;
     //Remove all blocks from previous round
@@ -315,7 +318,7 @@ function onToNextLevel(){
     playerAvatar.style.visibility="hidden";
     gameWonWindow.style.visibility="hidden";
     playerAvatar.style.transition="none";
-    playerAvatar.style.transform=`translate3d(-100px,600px,-200px)`;
+    playerAvatar.style.transform=`translate3d(${playerXtranslate}vh,${playerYtranslate}vh,-200px)`;
     safePathindex++;
     player.x=0;
     player.y=0;
@@ -329,20 +332,22 @@ function onToNextLevel(){
 }
 
 
+
 //Function to update the position of the graphical representation (avatar) of the player
 function updatePlayerOnBoard(){
     soundJ.play();
-    
-    //If we can still move thsi turn
+    console.log("i am called")
+    //If we can still move this turn
     if (movesThisTurn===0){
     inTransition=true;
-    placementY=player.y*116+33;
+    console.log(player.y)
+    placementY=(player.y)*oneJumpDistance+visualCorrection;
     placementYmiddle= (placementY-playerYtranslate)/2+playerYtranslate;
 
     oldPlayerYtranslate=playerYtranslate;
     playerYtranslate=placementY;
     
-    placementX=player.x*116+33;
+    placementX=player.x*oneJumpDistance+visualCorrection;
     placementXmiddle= (placementX-playerXtranslate)/2+playerXtranslate;
     oldPlayerXtranslate=playerXtranslate;
     playerXtranslate=placementX;
@@ -364,7 +369,7 @@ function updatePlayerOnBoard(){
         //If this it the initialization of the avatar on the board
         else{
            playerAvatar.style.transition="none";
-            playerAvatar.style.transform=`translate3d(${placementX}px,${placementY}px,30px)`;
+            playerAvatar.style.transform=`translate3d(${placementX}vh,${placementY}vh,30px)`;
            isFirstPLaced=true;
         }
     }   
@@ -375,7 +380,7 @@ function updatePlayerOnBoard(){
 function moveFigureUp(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
-    playerAvatar.style.transform=`translate3d(${Math.min(oldPlayerXtranslate+116/jumphalFTime * elapsed, placementXmiddle)}px,${Math.min(oldPlayerYtranslate+116/jumphalFTime * elapsed, placementYmiddle)}px,${Math.min(30+20/jumphalFTime * elapsed, 50)}px)`;    
+    playerAvatar.style.transform=`translate3d(${Math.min(oldPlayerXtranslate+oneJumpDistance/jumphalFTime * elapsed, placementXmiddle)}vh,${Math.min(oldPlayerYtranslate+oneJumpDistance/jumphalFTime * elapsed, placementYmiddle)}vh,${Math.min(30+20/jumphalFTime * elapsed, 50)}px)`;    
 
    
      if (elapsed<jumphalFTime){
@@ -387,7 +392,7 @@ function moveFigureUp(){
 function moveFiguredown(){
     let timestamp= Date.now();
     const elapsed = timestamp-start;
-    playerAvatar.style.transform=`translate3d(${Math.min(placementXmiddle+ 116/jumphalFTime * elapsed, placementX)}px,${Math.min(placementYmiddle+116/jumphalFTime * elapsed, placementY)}px,${Math.max(50-20/jumphalFTime * elapsed, 30)}px)`;
+    playerAvatar.style.transform=`translate3d(${Math.min(placementXmiddle+ oneJumpDistance/jumphalFTime * elapsed, placementX)}vh,${Math.min(placementYmiddle+oneJumpDistance/jumphalFTime * elapsed, placementY)}vh,${Math.max(50-20/jumphalFTime * elapsed, 30)}px)`;
     
     if (elapsed<jumphalFTime){
         window.requestAnimationFrame(moveFiguredown);
@@ -597,14 +602,14 @@ function gameOver(timer){
     playerAvatar.style.transition="none";
     playerAvatar.style.transition="transform 2s ease-in-out";
     lose.play();
-    playerAvatar.style.transform=`translate3d(${globalPlacementX}px,${globalPlacementY}px,-800px) rotateY(-120deg) rotateX(-120deg)`;
+    playerAvatar.style.transform=`translate3d(${globalPlacementX}vh,${globalPlacementY}vh,-800px) rotateY(-120deg) rotateX(-120deg)`;
     setTimeout(()=>{
         player.x=0;
         player.y=0;
         gameOverWindow.style.visibility="visible";
         playerAvatar.style.visibility='hidden';
         playerAvatar.style.transition="none";
-        playerAvatar.style.transform=`translate3d(-100px,600px,-200px)`;
+        playerAvatar.style.transform=`translate3d(${playerXtranslate}vh,${playerYtranslate}vh,-200px)`;
         stepInPath=0;
     },1500)
 }
