@@ -10,13 +10,13 @@
   --cube_size:calc(var(--block-size)/2);
   --sides:100px;
   --height:10px;
-  --offset: 45px;
+  --offset: calc((var(--sides) - var(--height) ) / 2 );
   --sidesPlatform:1200px;
   --heightPlatform:1800px;
-  --offsetPlatform: -300px;
+  --offsetPlatform: calc((var(--sidesPlatform) - var(--heightPlatform) ) / 2 );
   --sidesIndicator:50px;
   --heightIndicator:100px;
-  --offsetIndicator: -25px;
+  --offsetIndicator: calc((var(--sidesIndicator) - var(--heightIndicator) ) / 2 );
 
 /*Colors udes for the indicator block*/
   --colorGreenVibrant:#09ff00;
@@ -231,12 +231,12 @@ body{
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
-  height: 100%;
+  height: 100vh;
+  width: 100vw;
   
 }
 #view{
   position: relative;
-  top:-150px;
   z-index: 5;
 }
   
